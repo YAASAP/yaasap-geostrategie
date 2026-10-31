@@ -9,6 +9,7 @@ Une note = un fichier JSON (voir PROTOCOLE.md pour le schéma). Le HTML est écr
 notes/<même nom>.html ; index.html et data/index.json sont régénérés à chaque appel.
 Le contenu des champs « p », « html », « hl », etc. est du HTML de confiance (balises <strong>, <em>, <a>).
 """
+import hashlib
 import html as H
 import json
 import re
@@ -29,6 +30,17 @@ MONTHS_S = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août",
             "sept.", "oct.", "nov.", "déc."]
 DISCLAIMER = ("Ne constitue pas un conseil en investissement. "
               "Par Yacine AOUABED · YAASAP Géostratégie · yaasap.github.io/yaasap-geostrategie")
+
+def _asset_version():
+    h = hashlib.md5()
+    for n in ("style.css", "app.js", "banner.jpg"):
+        f = ROOT / "assets" / n
+        if f.exists():
+            h.update(f.read_bytes())
+    return h.hexdigest()[:8]
+
+
+ASSET_V = _asset_version()
 
 FONTS = ('<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500'
          '&family=Playfair+Display:ital,wght@0,500;0,700;1,400;1,500'
@@ -148,7 +160,7 @@ def page_head(title, desc, canonical, og_title=None):
 <meta property="og:url" content="{e(canonical)}">
 <meta name="robots" content="index,follow">
 {FONTS}
-<link rel="stylesheet" href="{{PREFIX}}assets/style.css">
+<link rel="stylesheet" href="{{PREFIX}}assets/style.css?v={ASSET_V}">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>"""
@@ -172,7 +184,7 @@ ORB = """<svg class="orb" viewBox="0 0 300 300" aria-hidden="true">
 
 
 def banner(prefix):
-    return (f'<div class="banner glass"><img src="{prefix}assets/banner.jpg" width="1672" height="941" '
+    return (f'<div class="banner glass"><img src="{prefix}assets/banner.jpg?v={ASSET_V}" width="1672" height="941" '
             'alt="YAASAP : analyses géostratégiques" fetchpriority="high"></div>')
 
 
@@ -278,7 +290,7 @@ def render_note(note, stem, index_entries):
 {footer(prefix, recent)}
 
 <script>window.NOTE_META={json.dumps(meta, ensure_ascii=False)};window.NOTE_CHARTS={json.dumps(charts, ensure_ascii=False).replace("</", "<\\/")};window.NOTE_TIMELINES={json.dumps(timelines, ensure_ascii=False).replace("</", "<\\/")};</script>
-<script src="{prefix}assets/app.js"></script>
+<script src="{prefix}assets/app.js?v={ASSET_V}"></script>
 </body>
 </html>
 """
@@ -340,7 +352,7 @@ def render_index(entries):
 </div>
 {footer(prefix, [{"file": x["file"], "nav": x["nav"]} for x in entries[:3]])}
 <script>window.NOTE_META={{"dateShort":""}};window.NOTE_CHARTS=[];window.NOTE_TIMELINES=[];</script>
-<script src="assets/app.js"></script>
+<script src="assets/app.js?v={ASSET_V}"></script>
 </body>
 </html>
 """
