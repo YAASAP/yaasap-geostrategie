@@ -61,7 +61,7 @@
     var el = document.getElementById('qr-mast');
     if (!el) return;
     if (typeof QRCode === 'undefined') { setTimeout(tryQR, 80); return; }
-    new QRCode(el, { text: location.href.split('#')[0], width: 32, height: 32, colorDark: '#1d2012', colorLight: '#fff', correctLevel: QRCode.CorrectLevel.M });
+    new QRCode(el, { text: location.href.split('#')[0], width: 32, height: 32, colorDark: '#0b1426', colorLight: '#fff', correctLevel: QRCode.CorrectLevel.M });
   })();
 })();
 
@@ -128,7 +128,7 @@ function nlSubmit() {
       plugins.push({ id: 'ctr', afterDraw: function (ch) {
         var a = ch.getDatasetMeta(0).data[0], cx = ch.ctx; if (!a) return;
         cx.save(); cx.textAlign = 'center'; cx.fillStyle = '#fbf5e4'; cx.shadowColor = 'rgba(217,184,115,.9)'; cx.shadowBlur = 14;
-        cx.font = "700 17px Orbitron, 'Source Sans 3', sans-serif"; cx.fillText(c.center.big || '', a.x, a.y + 4);
+        cx.font = "700 17px 'Playfair Display', Georgia, serif"; cx.fillText(c.center.big || '', a.x, a.y + 4);
         cx.shadowBlur = 0; cx.fillStyle = '#b8b196'; cx.font = "10px 'Source Code Pro', monospace"; cx.fillText(c.center.small || '', a.x, a.y + 24);
         cx.restore();
       } });

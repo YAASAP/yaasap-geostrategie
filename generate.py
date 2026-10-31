@@ -30,7 +30,8 @@ MONTHS_S = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août",
 DISCLAIMER = ("Ne constitue pas un conseil en investissement. "
               "Par Yacine AOUABED · YAASAP Géostratégie · yaasap.github.io/yaasap-geostrategie")
 
-FONTS = ('<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800'
+FONTS = ('<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500'
+         '&family=Playfair+Display:ital,wght@0,500;0,700;1,400;1,500'
          '&family=Source+Sans+3:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">')
 
 
@@ -155,8 +156,8 @@ def page_head(title, desc, canonical, og_title=None):
 
 ORB = """<svg class="orb" viewBox="0 0 300 300" aria-hidden="true">
     <defs><radialGradient id="og" cx="38%" cy="34%" r="75%">
-      <stop offset="0" stop-color="#c9a96a" stop-opacity=".55"/><stop offset=".6" stop-color="#5d6038" stop-opacity=".28"/>
-      <stop offset="1" stop-color="#14120a" stop-opacity=".12"/></radialGradient></defs>
+      <stop offset="0" stop-color="#d4af5f" stop-opacity=".5"/><stop offset=".6" stop-color="#1c3466" stop-opacity=".4"/>
+      <stop offset="1" stop-color="#060e1d" stop-opacity=".2"/></radialGradient></defs>
     <circle cx="150" cy="150" r="118" fill="url(#og)" stroke="#e9d6a0" stroke-opacity=".55"/>
     <g class="spin" fill="none" stroke="#f1e4c3" stroke-opacity=".35" stroke-width=".8">
       <ellipse cx="150" cy="150" rx="118" ry="38"/><ellipse cx="150" cy="150" rx="118" ry="78"/>
@@ -168,6 +169,11 @@ ORB = """<svg class="orb" viewBox="0 0 300 300" aria-hidden="true">
     <g stroke="#f1e4c3" stroke-opacity=".5" stroke-width=".8" fill="none">
       <path d="M104 108 L168 92 L196 140 L176 198 L134 176 L92 156 Z"/><path d="M168 92 L134 176"/></g>
   </svg>"""
+
+
+def banner(prefix):
+    return (f'<div class="banner glass"><img src="{prefix}assets/banner.jpg" width="1672" height="941" '
+            'alt="YAASAP : analyses géostratégiques" fetchpriority="high"></div>')
 
 
 def masthead(prefix):
@@ -226,6 +232,8 @@ def render_note(note, stem, index_entries):
 <body>
 {masthead(prefix)}
 <div class="shell">
+
+{banner(prefix)}
 
 <section class="hero glass">
   {ORB}
@@ -312,6 +320,7 @@ def render_index(entries):
 <body>
 {masthead(prefix)}
 <div class="shell">
+{banner(prefix)}
 <section class="hero glass home-hero">
   {ORB}
   <div class="hero-in">
