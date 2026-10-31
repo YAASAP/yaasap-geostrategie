@@ -214,8 +214,8 @@ ORB = """<svg class="orb" viewBox="0 0 300 300" aria-hidden="true">
   </svg>"""
 
 
-def banner(prefix):
-    return (f'<div class="banner glass"><img src="{prefix}assets/banner.jpg?v={ASSET_V}" width="1672" height="941" '
+def banner(prefix, full=False):
+    return (f'<div class="banner glass{" full" if full else ""}"><img src="{prefix}assets/banner.jpg?v={ASSET_V}" width="1672" height="941" '
             'alt="YAASAP : analyses géostratégiques" fetchpriority="high"></div>')
 
 
@@ -509,7 +509,8 @@ def render_points(entries):
         f'<circle class="dot" cx="{mp["points"][p["id"]][0]}" cy="{mp["points"][p["id"]][1]}" r="4.5"/>'
         f'<text x="{mp["points"][p["id"]][0] + 11}" y="{mp["points"][p["id"]][1] + 4}">{e(p["nom"].split(" (")[0].replace("Détroit d\'", "").replace("Détroit de ", "").replace("Canal de ", "").replace("Canal de Suez et SUMED", "Suez"))}</text></g>'
         for p in pts)
-    cards = "".join(
+    def pcard(p):
+        return (
         f'<article class="pcard glass" id="p-{p["id"]}"><div class="pc-h"><span class="tag t-{e(p["tension"].lower())}">{e(p["tension"])}</span><h3>{e(p["nom"])}</h3>'
         f'<div class="pc-m">{e(p["mer"])}</div></div>'
         f'<div class="pc-k"><div><b>{p["petrole"]:.1f}</b><span>mb/j pétrole</span></div><div><b>{p["gnl"]:.1f}</b><span>Gpi³/j GNL</span></div></div>'
@@ -518,8 +519,20 @@ def render_points(entries):
         f'<dt>Poids</dt><dd>{e(p["poids"])}</dd>'
         f'<dt>Hors pétrole</dt><dd>{e(p["hors"])}</dd>'
         f'<dt>Contournement</dt><dd>{e(p["alt"])}</dd>'
-        f'<dt>Lecture YAASAP</dt><dd>{e(p["lecture"])}</dd></dl></article>'
-        for p in pts)
+        f'<dt>Lecture YAASAP</dt><dd>{e(p["lecture"])}</dd></dl></article>')
+    CONT = [("moyen-orient", "Moyen-Orient et Golfe", ["ormuz"]),
+            ("afrique", "Afrique et mer Rouge", ["suez", "babelmandeb", "cap"]),
+            ("asie", "Asie", ["malacca"]),
+            ("europe", "Europe", ["turcs", "danois"]),
+            ("ameriques", "Amériques", ["panama"])]
+    byid = {p["id"]: p for p in pts}
+    cont_html = "".join(
+        f'<div class="sec-rule" id="c-{cid}"><span class="sec-rule-txt">{e(cn)}</span></div>'
+        f'<div class="pgrid">{"".join(pcard(byid[i]) for i in ids)}</div>' for cid, cn, ids in CONT)
+    toc_items = [(f"c-{cid}", cn, len(ids)) for cid, cn, ids in CONT] + [("trafic", "Pétrole et hors pétrole", 0), ("sources", "Sources", 0)]
+    toc_html = "".join(
+        f'<a href="#{i}" data-t="{i}"><span class="n">{k + 1:02d}</span><span class="t">{e(t)}</span>'
+        + (f'<span class="ct">{n}</span>' if n else "") + '</a>' for k, (i, t, n) in enumerate(toc_items))
     oil = sorted(
         [("Malacca", 23.2), ("Ormuz", 20.9), ("Cap de Bonne-Espérance", 9.1), ("Suez + SUMED", 4.9), ("Détroits danois", 4.9),
          ("Bab el-Mandeb", 4.2), ("Dardanelles", 3.7), ("Bosphore", 3.3), ("Panama (exercice 2025)", 2.3)], key=lambda x: -x[1])
@@ -547,7 +560,7 @@ def render_points(entries):
 <body>
 {masthead(prefix)}
 <div class="shell">
-{banner(prefix)}
+{banner(prefix, full=True)}
 <section class="hero glass home-hero">
   {ORB}
   <div class="hero-in">
@@ -563,13 +576,21 @@ def render_points(entries):
     </svg>
     <div class="map-legend"><span><i class="lg lg-critique"></i>Critique</span><span><i class="lg lg-élevée"></i>Élevée</span><span><i class="lg lg-surveillé"></i>Surveillé</span><span><i class="lg lg-structurel"></i>Structurel</span><span><i class="lg lg-modérée"></i>Modérée</span><span><i class="lg lg-refuge"></i>Refuge</span><span class="lg-n">Taille du cercle : volume de pétrole</span></div>
   </div>
-  <div class="sec-rule"><span class="sec-rule-txt">Fiche de chaque point</span></div>
-  <div class="pgrid">{cards}</div>
-  <div class="sec-rule"><span class="sec-rule-txt">Trafic pétrolier et hors pétrole</span></div>
+</div>
+<div class="layout">
+<aside class="toc glass" aria-label="Sommaire par continent">
+  <div class="toc-t">Par continent</div>
+  <nav id="toc">{toc_html}</nav>
+  <div class="toc-bar"><i id="tocBar"></i></div>
+</aside>
+<div class="wrap">
+  {cont_html}
+  <div class="sec-rule" id="trafic"><span class="sec-rule-txt">Trafic pétrolier et hors pétrole</span></div>
   {chart_html}
-  <div class="src">Sources : <a href="https://www.eia.gov/international/content/analysis/special_topics/World_Oil_Transit_Chokepoints" target="_blank" rel="noopener">EIA · World Oil Transit Chokepoints (3 mars 2026)</a> · <a href="https://www.downtoearth.org.in/economy/from-the-strait-of-hormuz-to-malacca-global-trade-relies-almost-entirely-on-these-five-narrow-waterways" target="_blank" rel="noopener">Down To Earth · chokepoints (18 mars 2026), d'après l'UNCTAD</a>. Les régimes juridiques sont rappelés d'après les conventions citées (CNUDM, Constantinople 1888, Montreux 1936, Copenhague 1857, traité de neutralité du Panama 1977). Les niveaux de tension sont la lecture de YAASAP, pas une donnée sourcée. Les flux d'Ormuz sont ceux d'avant la guerre actuelle : voir l'<a href="notes/20261031-1958-ormuz-doha-brent.html">analyse sur Ormuz</a>.</div>
+  <div class="src" id="sources">Sources : <a href="https://www.eia.gov/international/content/analysis/special_topics/World_Oil_Transit_Chokepoints" target="_blank" rel="noopener">EIA · World Oil Transit Chokepoints (3 mars 2026)</a> · <a href="https://www.downtoearth.org.in/economy/from-the-strait-of-hormuz-to-malacca-global-trade-relies-almost-entirely-on-these-five-narrow-waterways" target="_blank" rel="noopener">Down To Earth · chokepoints (18 mars 2026), d'après l'UNCTAD</a>. Les régimes juridiques sont rappelés d'après les conventions citées (CNUDM, Constantinople 1888, Montreux 1936, Copenhague 1857, traité de neutralité du Panama 1977). Les niveaux de tension sont la lecture de YAASAP, pas une donnée sourcée. Les flux d'Ormuz sont ceux d'avant la guerre actuelle : voir l'<a href="notes/20261031-1958-ormuz-doha-brent.html">analyse sur Ormuz</a>.</div>
   <div class="v-disc" style="margin-top:18px">{e(DISCLAIMER)}</div>
   {newsletter()}
+</div>
 </div>
 </div>
 {footer(prefix, [{"file": x["file"], "nav": x["nav"]} for x in entries[:3]])}

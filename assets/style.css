@@ -402,3 +402,8 @@ html.sub .lk-on{display:inline}html.sub .lk-off{display:none}
 .home-links{display:flex;gap:12px;flex-wrap:wrap;margin:6px 0 18px}
 @media(max-width:800px){.pgrid{grid-template-columns:1fr}.wmap text{font-size:13px}.lg-n{margin-left:0}}
 .wrap.wide{max-width:1088px}
+.banner.full img{height:auto;max-height:none;object-fit:contain;width:100%}
+#toc a .ct{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--gray);padding-left:8px}
+#toc a.on .ct{color:var(--glow)}
+.layout .pgrid{grid-template-columns:1fr}
+@media(min-width:1180px){.layout .pgrid{grid-template-columns:repeat(2,1fr)}}
