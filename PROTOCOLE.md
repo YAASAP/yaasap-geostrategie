@@ -2,10 +2,17 @@
 
 Ce fichier est la consigne exécutée à chaque publication (toutes les 2 heures). Modifiez-le pour changer la ligne éditoriale : la prochaine exécution en tiendra compte.
 
+## 0. Dépôts et accès (modèle freemium)
+
+Deux dépôts sont clonés côte à côte dans le même dossier parent : `yaasap-geostrategie` (public, le site) et `yaasap-geostrategie-prive` (privé : clé de chiffrement, abonnés, sources des analyses archivées). Avant tout : `pip install --break-system-packages cryptography`.
+
+- La **dernière** analyse est en accès libre. Dès qu'une nouvelle analyse est générée, la précédente est **archivée automatiquement** par `generate.py` : son JSON passe dans le dépôt privé (`notes/`) et sa page devient une page chiffrée, réservée aux abonnés (titre, résumé et tags restent publics).
+- Ne jamais lire, afficher ni copier `cle.json` ni `abonnes.json`. Ne jamais les committer dans le dépôt public.
+
 ## 1. Cadrage
 
 1. Lire l'heure avec l'outil d'heure courante (fuseau Europe/Paris). Ne jamais deviner la date.
-2. Lire `data/index.json` : titres et dates des analyses déjà publiées. Lire la dernière note JSON (`data/notes/…`) pour reprendre le même modèle.
+2. Lire `data/index.json` : titres et dates des analyses déjà publiées. Lire la dernière note JSON (`data/notes/…`, seule note publique) pour reprendre le même modèle ; les anciennes sont dans `../yaasap-geostrategie-prive/notes/` (lecture permise pour éviter les doublons de sujet).
 3. Choisir **un sujet** :
    - priorité à un développement majeur survenu depuis la dernière publication (vote à l'ONU, frappe, accord, sanction, élection, incident maritime…) ;
    - sinon, un théâtre non traité dans les 12 dernières analyses. Théâtres : Moyen-Orient et Golfe, Russie–Ukraine et Europe, Indo-Pacifique et Taïwan, Afrique (Sahel, Sahara, Corne), Amériques, Asie du Sud, énergie et matières premières, détroits et routes maritimes, espace et cyber, sanctions et commerce, élections et institutions.
@@ -70,18 +77,22 @@ Règles du schéma : exactement 6 KPI ; 5 à 8 puces de verdict ; au moins une s
 ## 5. Génération et publication
 
 ```bash
-python3 generate.py data/notes/<fichier>.json     # produit notes/<fichier>.html, index.html, data/index.json
+python3 generate.py data/notes/<fichier>.json     # rend la note, archive la précédente, reconstruit accueil + abonnement
 ```
 
+La commande affiche `ARCHIVÉ …` pour la note précédente et `OK … (verrouillée)` pour sa page chiffrée. Si elle échoue (clé ou dépôt privé introuvable), ne rien publier et le dire.
+
 1. Relire le HTML produit (titres, chiffres, liens). Corriger le JSON puis régénérer si besoin.
-2. `git pull --rebase origin main`, puis `git add` des seuls fichiers générés (`data/`, `notes/`, `index.html`).
-3. Commit en français, une ligne : `Analyse : <titre court>` (plus les lignes d'attribution demandées par la session).
-4. `git push origin HEAD:main`. En cas de refus « behind » : `git pull --rebase origin main` puis repousser une fois.
-5. Résultat attendu : `https://yaasap.github.io/yaasap-geostrategie/notes/<fichier>.html` en ligne après 1 à 2 minutes (GitHub Pages).
+2. **Dépôt privé d'abord** : dans `yaasap-geostrategie-prive`, `git add notes/`, commit `Archive : <titre court>`, `git pull --rebase origin main`, `git push origin HEAD:main`. (Rien à committer s'il n'y a pas eu d'archivage.)
+3. **Dépôt public ensuite** : `git pull --rebase origin main`, puis `git add -A data notes index.html abonnement.html`. Le fichier `data/notes/<précédente>.json` apparaît comme supprimé : c'est voulu.
+4. Commit en français, une ligne : `Analyse : <titre court>` (plus les lignes d'attribution demandées par la session).
+5. `git push origin HEAD:main`. En cas de refus « behind » : `git pull --rebase origin main` puis repousser une fois.
+6. Résultat attendu : `https://yaasap.github.io/yaasap-geostrategie/notes/<fichier>.html` en ligne après 1 à 2 minutes (GitHub Pages).
 
 ## 6. Interdits
 
 - Ne jamais modifier `assets/`, `generate.py` ou ce protocole pendant une publication courante, sauf bug bloquant décrit dans le message de commit.
-- Ne jamais supprimer ni réécrire une analyse déjà publiée ; une correction se fait par une nouvelle note ou par un `sources_note` explicite.
+- Ne jamais supprimer ni réécrire une analyse déjà publiée ; une correction se fait par une nouvelle note ou par un `sources_note` explicite. L'archivage automatique (déplacement vers le dépôt privé) n'est pas une suppression.
+- Ne jamais toucher à `access.json` (géré par `tools/acces.py` du dépôt privé) ni afficher un code d'accès.
 - Pas d'image protégée, pas de contenu haineux, pas de détail opérationnel pouvant faciliter des violences.
 - Jamais de conseil d'investissement personnalisé : la mention « Ne constitue pas un conseil en investissement » est générée automatiquement.

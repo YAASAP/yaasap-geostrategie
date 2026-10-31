@@ -85,10 +85,10 @@ function nlSubmit() {
 }
 
 /* ---------- Graphiques ---------- */
-(function tryCharts() {
+function yaCharts() {
   var list = window.NOTE_CHARTS || [];
   if (!list.length) return;
-  if (typeof Chart === 'undefined') { setTimeout(tryCharts, 80); return; }
+  if (typeof Chart === 'undefined') { setTimeout(yaCharts, 80); return; }
   var tf = { size: 10, family: "'Source Code Pro','Courier New',monospace" };
   Chart.defaults.color = '#b8b196'; Chart.defaults.font = tf;
   var tt = { backgroundColor: 'rgba(24,24,14,.92)', titleColor: '#fbf5e4', bodyColor: '#f1e4c3', borderColor: 'rgba(214,190,130,.45)', borderWidth: 1, padding: 10, cornerRadius: 8, displayColors: false };
@@ -135,10 +135,10 @@ function nlSubmit() {
     }
     new Chart(cv, { type: kind, data: { labels: c.labels, datasets: datasets }, options: opts, plugins: plugins });
   });
-})();
+}
 
 /* ---------- Repères chronologiques cliquables ---------- */
-(function () {
+function yaTimelines() {
   var T = window.NOTE_TIMELINES || [];
   T.forEach(function (events, idx) {
     var tl = document.getElementById('tl' + idx), td = document.getElementById('tlDetail' + idx);
@@ -154,10 +154,10 @@ function nlSubmit() {
     });
     show(events.length - 1);
   });
-})();
+}
 
 /* ---------- Sommaire dynamique : surbrillance de la section lue + progression ---------- */
-(function () {
+function yaToc() {
   var nav = document.getElementById('toc');
   if (!nav) return;
   var links = [].slice.call(nav.querySelectorAll('a'));
@@ -182,4 +182,8 @@ function nlSubmit() {
   window.addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(function () { tick = false; update(); }); } }, { passive: true });
   window.addEventListener('resize', update);
   update();
-})();
+}
+
+/* Initialisation (rappelée après le déverrouillage d'une analyse archivée) */
+window.yaInit = function () { yaCharts(); yaTimelines(); yaToc(); };
+window.yaInit();

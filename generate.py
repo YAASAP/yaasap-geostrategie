@@ -2,16 +2,22 @@
 """YAASAP Géostratégie — générateur de notes.
 
 Usage :
-    python3 generate.py data/notes/<fichier>.json     # rend une note + reconstruit l'accueil
+    python3 generate.py data/notes/<fichier>.json     # rend une note, archive les précédentes, reconstruit l'accueil
     python3 generate.py --rebuild                     # reconstruit toutes les notes et l'accueil
+
+La dernière analyse est en accès libre ; les autres sont chiffrées (AES-GCM) avec la clé du dépôt
+privé et déplacées dans ce dépôt (dossier notes/). Nécessite le paquet « cryptography » dès qu'une
+note est verrouillée.
 
 Une note = un fichier JSON (voir PROTOCOLE.md pour le schéma). Le HTML est écrit dans
 notes/<même nom>.html ; index.html et data/index.json sont régénérés à chaque appel.
 Le contenu des champs « p », « html », « hl », etc. est du HTML de confiance (balises <strong>, <em>, <a>).
 """
+import base64
 import hashlib
 import html as H
 import json
+import os
 import re
 import sys
 from datetime import datetime
@@ -23,6 +29,10 @@ NOTES_DIR = ROOT / "notes"
 DATA_DIR = ROOT / "data" / "notes"
 SITE = "https://yaasap.github.io/yaasap-geostrategie"
 MAIN_SITE = "https://yaasap.github.io/dailywatch"
+STRIPE_URL = "https://buy.stripe.com/cNi8wP6GHh0o5eWekCgIo0m"
+PRICE = "3 € / mois"
+# Dépôt privé : clé de chiffrement, abonnés et sources des analyses archivées
+PRIV = Path(os.environ.get("YAASAP_PRIVE") or ROOT.parent / "yaasap-geostrategie-prive")
 TZ = ZoneInfo("Europe/Paris")
 MONTHS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août",
           "septembre", "octobre", "novembre", "décembre"]
@@ -33,7 +43,7 @@ DISCLAIMER = ("Ne constitue pas un conseil en investissement. "
 
 def _asset_version():
     h = hashlib.md5()
-    for n in ("style.css", "app.js", "banner.jpg"):
+    for n in ("style.css", "app.js", "acces.js", "banner.jpg"):
         f = ROOT / "assets" / n
         if f.exists():
             h.update(f.read_bytes())
@@ -206,6 +216,7 @@ def footer(prefix, recent):
     <a href="{prefix}index.html">Accueil</a>
     {links}
     <a href="{prefix}index.html#archives">Archives</a>
+    <a href="{prefix}abonnement.html">Abonnement</a>
     <a href="{MAIN_SITE}/">YAASAP Notes</a>
   </div>
   <div class="f-note">YAASAP Géostratégie · Yacine AOUABED · yaasap.github.io/yaasap-geostrategie<br>Ne constitue pas un conseil en investissement.</div>
@@ -224,7 +235,47 @@ def newsletter():
   </div>"""
 
 
-def render_note(note, stem, index_entries):
+def load_key():
+    k = os.environ.get("YAASAP_KEY")
+    if not k:
+        f = PRIV / "cle.json"
+        if not f.exists():
+            raise SystemExit("Clé de chiffrement introuvable : dépôt privé absent (%s)" % PRIV)
+        k = json.loads(f.read_text(encoding="utf-8"))["k"]
+    return base64.b64decode(k)
+
+
+def encrypt_payload(key, obj):
+    """AES-256-GCM ; format iv(12) + chiffré + tag, compatible WebCrypto."""
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+    iv = os.urandom(12)
+    data = json.dumps(obj, ensure_ascii=False).encode("utf-8")
+    return base64.b64encode(iv + AESGCM(key).encrypt(iv, data, None)).decode()
+
+
+def login_form():
+    return """<form class="login" id="loginForm" autocomplete="on">
+      <div class="login-t">Déjà abonné ? Entrez votre accès</div>
+      <div class="login-row">
+        <input type="email" id="lgEmail" placeholder="E-mail d'abonné" required autocomplete="email">
+        <input type="text" id="lgCode" placeholder="Code d'accès" required autocomplete="off" spellcheck="false">
+        <button type="submit" class="btn-gold">Débloquer</button>
+      </div>
+      <div class="login-msg" id="lgMsg" role="status"></div>
+    </form>"""
+
+
+def gate_html(prefix):
+    return f"""<section class="gate glass" id="gate">
+  <div class="gate-lock">🔒</div>
+  <h2>Analyse réservée aux abonnés</h2>
+  <p>Cette analyse fait partie des archives. La dernière analyse publiée reste en accès libre ; toutes les archives sont accessibles aux abonnés pour {PRICE}.</p>
+  <div class="gate-cta"><a class="btn-gold" href="{STRIPE_URL}" target="_blank" rel="noopener">S'abonner · {PRICE}</a><a class="btn-ghost" href="{prefix}abonnement.html">Détails de l'abonnement</a></div>
+  {login_form()}
+</section>"""
+
+
+def render_note(note, stem, index_entries, locked=False):
     dt = parse_dt(note)
     charts, timelines = [], []
     prefix = "../"
@@ -247,23 +298,7 @@ def render_note(note, stem, index_entries):
     meta = {"dateShort": date_short(dt)}
     head = page_head(f'YAASAP Géostratégie · {note["title"]}', note["deck"], canonical, note["title"]).replace("{PREFIX}", prefix)
     src_names = " · ".join(s["t"] for s in note.get("sources", []))
-    page = f"""{head}
-<body>
-{masthead(prefix)}
-<div class="shell">
-
-{banner(prefix)}
-
-<section class="hero glass">
-  {ORB}
-  <div class="hero-in">
-    <div class="eyebrow">{tags}<span class="tag">{e(date_short(dt))} · {dt.strftime('%H:%M')}</span></div>
-    <h1>{e(note["title"])}</h1>
-    <p class="deck">{e(note["deck"])}</p>
-  </div>
-</section>
-
-<div class="kpi-strip">
+    inner = f"""<div class="kpi-strip">
   {kpis}
 </div>
 
@@ -298,23 +333,49 @@ def render_note(note, stem, index_entries):
   {newsletter()}
 
 </div>
-</div>
+</div>"""
+    if locked:
+        payload = encrypt_payload(load_key(), {"inner": inner, "charts": charts, "timelines": timelines})
+        middle = (gate_html(prefix) + '\n<div id="locked-slot"></div>\n'
+                  f'<script id="payload" type="application/json">{{"v":1,"d":"{payload}"}}</script>')
+        charts, timelines = [], []
+    else:
+        middle = inner
+    page = f"""{head}
+<body{' class="is-locked"' if locked else ''}>
+{masthead(prefix)}
+<div class="shell">
+
+{banner(prefix)}
+
+<section class="hero glass">
+  {ORB}
+  <div class="hero-in">
+    <div class="eyebrow">{tags}<span class="tag">{e(date_short(dt))} · {dt.strftime('%H:%M')}</span>{'<span class="tag lk">🔒 Abonnés</span>' if locked else '<span class="tag hot">Accès libre</span>'}</div>
+    <h1>{e(note["title"])}</h1>
+    <p class="deck">{e(note["deck"])}</p>
+  </div>
+</section>
+
+{middle}
 </div>
 
 {footer(prefix, recent)}
 
-<script>window.NOTE_META={json.dumps(meta, ensure_ascii=False)};window.NOTE_CHARTS={json.dumps(charts, ensure_ascii=False).replace("</", "<\\/")};window.NOTE_TIMELINES={json.dumps(timelines, ensure_ascii=False).replace("</", "<\\/")};</script>
+<script>window.YA_PREFIX="{prefix}";window.NOTE_META={json.dumps(meta, ensure_ascii=False)};window.NOTE_CHARTS={json.dumps(charts, ensure_ascii=False).replace("</", "<\\/")};window.NOTE_TIMELINES={json.dumps(timelines, ensure_ascii=False).replace("</", "<\\/")};</script>
 <script src="{prefix}assets/app.js?v={ASSET_V}"></script>
+<script src="{prefix}assets/acces.js?v={ASSET_V}"></script>
 </body>
 </html>
 """
     (NOTES_DIR / f"{stem}.html").write_text(page, encoding="utf-8")
 
 
-def entry_from(note, stem):
+def entry_from(note, stem, locked=False):
     dt = parse_dt(note)
     return {
         "file": f"{stem}.html",
+        "locked": locked,
         "published": dt.isoformat(),
         "title": note["title"],
         "deck": note["deck"],
@@ -329,15 +390,24 @@ def render_index(entries):
                      "Une analyse géostratégique indépendante toutes les 2 heures : faits sourcés, positions des acteurs, "
                      "risques et canaux de marché. Par Yacine AOUABED.", f"{SITE}/").replace("{PREFIX}", prefix)
     head = head.replace('<meta property="og:type" content="article">', '<meta property="og:type" content="website">')
-    cards = []
-    for n in entries:
+    def card(n):
         dt = datetime.fromisoformat(n["published"]).astimezone(TZ)
         tags = "".join(f'<span class="tag{" hot" if t.get("hot") else ""}">{e(t["t"])}</span>' for t in n["tags"])
-        cards.append(
-            f'<a class="ncard glass" href="notes/{e(n["file"])}"><div class="eyebrow">{tags}</div>'
-            f'<h2>{e(n["title"])}</h2><p>{e(n["deck"])}</p>'
-            f'<div class="nc-d">{e(date_long(dt))} · {dt.strftime("%H:%M")}</div></a>')
-    cards_html = "\n".join(cards) if cards else '<div class="empty glass">Première analyse à venir.</div>'
+        badge = ('<span class="tag lk"><span class="lk-off">🔒 Abonnés</span><span class="lk-on">✓ Abonné</span></span>'
+                 if n.get("locked") else '<span class="tag hot">Accès libre</span>')
+        return (f'<a class="ncard glass{" locked" if n.get("locked") else ""}" href="notes/{e(n["file"])}">'
+                f'<div class="eyebrow">{tags}{badge}</div>'
+                f'<h2>{e(n["title"])}</h2><p>{e(n["deck"])}</p>'
+                f'<div class="nc-d">{e(date_long(dt))} · {dt.strftime("%H:%M")}</div></a>')
+    free = [n for n in entries if not n.get("locked")]
+    arch = [n for n in entries if n.get("locked")]
+    cards_html = "\n".join(card(n) for n in free) if free else '<div class="empty glass">Première analyse à venir.</div>'
+    arch_html = ""
+    if arch:
+        arch_html = ('<div class="sec-rule" id="archives"><span class="sec-rule-txt">Archives · réservées aux abonnés</span></div>\n'
+                     + cta_band() + '\n<div class="ncards">\n' + "\n".join(card(n) for n in arch) + '\n</div>')
+    else:
+        arch_html = '<div id="archives"></div>' + cta_band()
     last = ""
     if entries:
         dt = datetime.fromisoformat(entries[0]["published"]).astimezone(TZ)
@@ -357,20 +427,83 @@ def render_index(entries):
   </div>
 </section>
 <div class="wrap" id="archives">
-  <div class="sec-rule"><span class="sec-rule-txt">Dernières analyses</span></div>
+  <div class="sec-rule"><span class="sec-rule-txt">Dernière analyse · accès libre</span></div>
   <div class="ncards">
 {cards_html}
   </div>
+  {arch_html}
   {newsletter()}
 </div>
 </div>
 {footer(prefix, [{"file": x["file"], "nav": x["nav"]} for x in entries[:3]])}
-<script>window.NOTE_META={{"dateShort":""}};window.NOTE_CHARTS=[];window.NOTE_TIMELINES=[];</script>
+<script>window.YA_PREFIX="./";window.NOTE_META={{"dateShort":""}};window.NOTE_CHARTS=[];window.NOTE_TIMELINES=[];</script>
 <script src="assets/app.js?v={ASSET_V}"></script>
+<script src="assets/acces.js?v={ASSET_V}"></script>
 </body>
 </html>
 """
     (ROOT / "index.html").write_text(page, encoding="utf-8")
+
+
+def cta_band():
+    return (f'<div class="cta-band glass"><div><div class="cta-t">Toutes les archives, pour {PRICE}</div>'
+            '<div class="cta-s">La dernière analyse reste en accès libre. Abonnez-vous pour lire chaque analyse précédente en entier.</div></div>'
+            f'<div class="cta-b"><a class="btn-gold" href="{STRIPE_URL}" target="_blank" rel="noopener">S\'abonner</a>'
+            '<a class="btn-ghost" href="abonnement.html">Déjà abonné ?</a></div></div>')
+
+
+def render_abonnement(entries):
+    prefix = "./"
+    head = page_head("YAASAP Géostratégie · abonnement",
+                     "Accès à toutes les archives des analyses géostratégiques YAASAP : 3 € par mois. "
+                     "La dernière analyse reste en accès libre.", f"{SITE}/abonnement.html").replace("{PREFIX}", prefix)
+    head = head.replace('<meta property="og:type" content="article">', '<meta property="og:type" content="website">')
+    n_arch = len([x for x in entries if x.get("locked")])
+    page = f"""{head}
+<body>
+{masthead(prefix)}
+<div class="shell">
+{banner(prefix)}
+<section class="hero glass home-hero">
+  {ORB}
+  <div class="hero-in">
+    <div class="eyebrow"><span class="tag hot">Abonnement</span><span class="tag">{PRICE}</span></div>
+    <h1>Toutes les archives YAASAP Géostratégie</h1>
+    <p class="deck">La dernière analyse est toujours en accès libre. L'abonnement ouvre l'ensemble des analyses précédentes ({n_arch} à ce jour, une de plus toutes les 2 heures).</p>
+  </div>
+</section>
+<div class="wrap">
+  <div class="offer glass">
+    <div class="offer-p"><span class="offer-n">3 €</span><span class="offer-u">par mois, TTC</span></div>
+    <ul class="offer-l">
+      <li>Accès à toutes les analyses archivées, en version complète : chiffres, graphiques, positions des acteurs, scénarios, verdict, sources</li>
+      <li>Les nouvelles analyses rejoignent vos archives automatiquement</li>
+      <li>Paiement sécurisé par Stripe</li>
+    </ul>
+    <a class="btn-gold btn-big" href="{STRIPE_URL}" target="_blank" rel="noopener">S'abonner · {PRICE}</a>
+  </div>
+  <div class="sec-rule"><span class="sec-rule-txt">Comment ça marche</span></div>
+  <div class="steps">
+    <div class="step glass"><span class="step-n">1</span><p>Abonnez-vous avec le bouton ci-dessus, en indiquant votre e-mail.</p></div>
+    <div class="step glass"><span class="step-n">2</span><p>Vous recevez votre <strong>code d'accès personnel</strong> par e-mail, sous 24 h.</p></div>
+    <div class="step glass"><span class="step-n">3</span><p>Saisissez votre e-mail et votre code ci-dessous : les archives s'ouvrent sur cet appareil.</p></div>
+  </div>
+  <div class="sec-rule"><span class="sec-rule-txt">Accès abonné</span></div>
+  <div class="gate glass" id="loginBox">
+    {login_form()}
+    <div class="login-ok" id="lgOk"><strong>✓ Accès activé.</strong> <a href="index.html#archives">Ouvrir les archives →</a> · <a href="#" id="logout">Se déconnecter</a></div>
+  </div>
+  <div class="v-disc" style="margin-top:18px">{e(DISCLAIMER)}</div>
+</div>
+</div>
+{footer(prefix, [{"file": x["file"], "nav": x["nav"]} for x in entries[:3]])}
+<script>window.YA_PREFIX="./";window.NOTE_META={{"dateShort":""}};window.NOTE_CHARTS=[];window.NOTE_TIMELINES=[];</script>
+<script src="assets/app.js?v={ASSET_V}"></script>
+<script src="assets/acces.js?v={ASSET_V}"></script>
+</body>
+</html>
+"""
+    (ROOT / "abonnement.html").write_text(page, encoding="utf-8")
 
 
 def validate(note):
@@ -390,31 +523,47 @@ def validate(note):
 def main(argv):
     NOTES_DIR.mkdir(exist_ok=True)
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    if argv and argv[0] == "--rebuild":
-        files = sorted(DATA_DIR.glob("*.json"))
-    elif argv:
-        files = [Path(argv[0]).resolve()]
-    else:
+    if not argv:
         print(__doc__)
         return 1
-    # 1) entrées d'index de toutes les notes existantes
-    all_json = sorted(DATA_DIR.glob("*.json"))
-    notes = {}
-    for f in set(all_json) | set(files):
-        n = json.loads(f.read_text(encoding="utf-8"))
+    rebuild = argv[0] == "--rebuild"
+    priv_dir = PRIV / "notes"
+    # 1) toutes les notes : publiques (data/notes) + archivées (dépôt privé)
+    pub = {}
+    for f in sorted(DATA_DIR.glob("*.json")):
+        pub[f.stem] = json.loads(f.read_text(encoding="utf-8"))
+    if not rebuild:
+        f = Path(argv[0]).resolve()
+        pub[f.stem] = json.loads(f.read_text(encoding="utf-8"))
+    arch = {}
+    if priv_dir.exists():
+        for f in sorted(priv_dir.glob("*.json")):
+            arch[f.stem] = json.loads(f.read_text(encoding="utf-8"))
+    notes = {**arch, **pub}
+    for n in notes.values():
         validate(n)
-        notes[f.stem] = n
-    entries = [entry_from(n, s) for s, n in notes.items()]
+    latest = max(notes, key=lambda s: notes[s]["published"])
+    # 2) archivage : tout sauf la dernière analyse passe dans le dépôt privé
+    moved = [s for s in pub if s != latest]
+    if moved:
+        if not PRIV.exists():
+            raise SystemExit("Dépôt privé introuvable (%s) : impossible d'archiver." % PRIV)
+        priv_dir.mkdir(parents=True, exist_ok=True)
+        for s in moved:
+            (priv_dir / f"{s}.json").write_text(json.dumps(notes[s], ensure_ascii=False, indent=1), encoding="utf-8")
+            (DATA_DIR / f"{s}.json").unlink(missing_ok=True)
+            print("ARCHIVÉ  data/notes/%s.json -> dépôt privé" % s)
+    entries = [entry_from(n, s, locked=(s != latest)) for s, n in notes.items()]
     entries.sort(key=lambda x: x["published"], reverse=True)
-    # 2) rendu des notes demandées
-    to_render = list(notes) if argv[0] == "--rebuild" else [files[0].stem]
+    # 3) rendu
+    to_render = list(notes) if rebuild else sorted(set(moved) | {latest})
     for s in to_render:
-        render_note(notes[s], s, entries)
-        print("OK  notes/%s.html" % s)
-    # 3) accueil + index JSON
+        render_note(notes[s], s, entries, locked=(s != latest))
+        print("OK  notes/%s.html%s" % (s, "  (verrouillée)" if s != latest else ""))
     render_index(entries)
+    render_abonnement(entries)
     (ROOT / "data" / "index.json").write_text(json.dumps(entries, ensure_ascii=False, indent=1), encoding="utf-8")
-    print("OK  index.html (%d analyses)" % len(entries))
+    print("OK  index.html + abonnement.html (%d analyses)" % len(entries))
     return 0
 
 

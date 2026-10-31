@@ -25,6 +25,10 @@ python3 generate.py data/notes/<fichier>.json   # rend une analyse et reconstrui
 python3 generate.py --rebuild                   # reconstruit tout (après un changement de gabarit)
 ```
 
-Aucune dépendance : Python 3.9+ uniquement. Les graphiques utilisent Chart.js via CDN.
+Dépendance : Python 3.9+ ; le paquet `cryptography` dès qu'une analyse est archivée. Les graphiques utilisent Chart.js via CDN.
+
+## Accès
+
+La dernière analyse est libre ; les archives sont chiffrées (AES-256-GCM, déchiffrées dans le navigateur) et réservées aux abonnés ([abonnement](https://yaasap.github.io/yaasap-geostrategie/abonnement.html)). `access.json` ne contient que les enveloppes de clé des abonnés ; clé, codes et sources archivées sont dans un dépôt privé.
 
 *Ne constitue pas un conseil en investissement. Par Yacine AOUABED.*
