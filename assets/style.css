@@ -407,3 +407,4 @@ html.sub .lk-on{display:inline}html.sub .lk-off{display:none}
 #toc a.on .ct{color:var(--glow)}
 .layout .pgrid{grid-template-columns:1fr}
 @media(min-width:1180px){.layout .pgrid{grid-template-columns:repeat(2,1fr)}}
+.nl-frame{display:block;width:100%;max-width:540px;height:340px;margin:10px auto 0;border:0;border-radius:12px;background:#fff}

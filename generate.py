@@ -242,14 +242,13 @@ def footer(prefix, recent):
 </div>"""
 
 
+BREVO_FORM = "https://7e6e1dec.sibforms.com/v2/serve/MUIFAC4TBoAJsEjOID6O4MuoQJ0P--3AueU4ptl4DgI1mIHSz7VnvHEvGODq_Ze-g8HizTa3ZA0Bl2l6Aq8P3RRwpfpPiWgPXrjlo2ZZD999bcKcrAiDD4m0WMqwW-A88pziynZluGOa7k558_NzpMut4S5y6VW76yWvfJndOLk4_Q2EzcCXglPM7qh2F0pYwWtoKx59UxraNx7oIA=="
+
+
 def newsletter():
-    return """<div class="nl glass">
+    return f"""<div class="nl glass">
     <div class="nl-hl">Recevoir les prochaines analyses YAASAP</div>
-    <div class="nl-row">
-      <input class="nl-input" type="email" id="nlEmail" placeholder="votre@email.com">
-      <button class="nl-btn" onclick="nlSubmit()">S'ABONNER →</button>
-    </div>
-    <div class="nl-ok" id="nlOk">✓ Inscrit — vérifiez votre boite mail</div>
+    <iframe class="nl-frame" src="{BREVO_FORM}" title="Inscription à la newsletter YAASAP Géostratégie" loading="lazy" frameborder="0" scrolling="auto" allowfullscreen></iframe>
   </div>"""
 
 
