@@ -356,6 +356,8 @@ def render_note(note, stem, index_entries, locked=False):
 
   <div class="src" id="sources">Sources : {srcs}.{(" " + raw("sources_note", src_note)) if src_note else ""}</div>
 
+  {cta_band(prefix)}
+
   {newsletter()}
 
 </div>
@@ -366,7 +368,7 @@ def render_note(note, stem, index_entries, locked=False):
                   f'<script id="payload" type="application/json">{{"v":1,"d":"{payload}"}}</script>')
         charts, timelines = [], []
     else:
-        middle = inner
+        middle = inner.replace("  <newsletter-slot/>", "")
     page = f"""{head}
 <body{' class="is-locked"' if locked else ''}>
 {masthead(prefix)}
@@ -586,6 +588,7 @@ def render_points(entries):
   <div class="sec-rule" id="trafic"><span class="sec-rule-txt">Trafic pétrolier et hors pétrole</span></div>
   {chart_html}
   <div class="src" id="sources">Sources : <a href="https://www.eia.gov/international/content/analysis/special_topics/World_Oil_Transit_Chokepoints" target="_blank" rel="noopener">EIA · World Oil Transit Chokepoints (3 mars 2026)</a> · <a href="https://www.downtoearth.org.in/economy/from-the-strait-of-hormuz-to-malacca-global-trade-relies-almost-entirely-on-these-five-narrow-waterways" target="_blank" rel="noopener">Down To Earth · chokepoints (18 mars 2026), d'après l'UNCTAD</a>. Les régimes juridiques sont rappelés d'après les conventions citées (CNUDM, Constantinople 1888, Montreux 1936, Copenhague 1857, traité de neutralité du Panama 1977). Les niveaux de tension sont la lecture de YAASAP, pas une donnée sourcée. Les flux d'Ormuz sont ceux d'avant la guerre actuelle : voir l'<a href="notes/20261031-1958-ormuz-doha-brent.html">analyse sur Ormuz</a>.</div>
+  {cta_band(prefix)}
   <div class="v-disc" style="margin-top:18px">{e(DISCLAIMER)}</div>
   {newsletter()}
 </div>
@@ -602,11 +605,11 @@ def render_points(entries):
     (ROOT / "points-strategiques.html").write_text(page, encoding="utf-8")
 
 
-def cta_band():
+def cta_band(prefix=""):
     return (f'<div class="cta-band glass"><div><div class="cta-t">Toutes les analyses, pour {PRICE}</div>'
             '<div class="cta-s">Seule l\'analyse sur Ormuz est offerte. Abonnez-vous pour lire chaque analyse en entier, dès sa publication.</div></div>'
             f'<div class="cta-b"><a class="btn-gold" href="{STRIPE_URL}" target="_blank" rel="noopener">S\'abonner</a>'
-            '<a class="btn-ghost" href="abonnement.html">Déjà abonné ?</a></div></div>')
+            f'<a class="btn-ghost" href="{prefix}abonnement.html">Déjà abonné ?</a></div></div>')
 
 
 def render_abonnement(entries):
