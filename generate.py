@@ -28,7 +28,6 @@ ROOT = Path(__file__).resolve().parent
 NOTES_DIR = ROOT / "notes"
 DATA_DIR = ROOT / "data" / "notes"
 SITE = "https://yaasap.github.io/yaasap-geostrategie"
-MAIN_SITE = "https://yaasap.github.io/dailywatch"
 # Seule analyse en accès libre (découverte) ; toutes les autres sont réservées aux abonnés
 FREE = {"20261031-1958-ormuz-doha-brent"}
 STRIPE_URL = "https://buy.stripe.com/cNi8wP6GHh0o5eWekCgIo0m"
@@ -237,7 +236,6 @@ def footer(prefix, recent):
     <a href="{prefix}index.html#archives">Analyses abonnés</a>
     <a href="{prefix}points-strategiques.html">Points stratégiques</a>
     <a href="{prefix}abonnement.html">Abonnement</a>
-    <a href="{MAIN_SITE}/">YAASAP Notes</a>
   </div>
   <div class="f-note">YAASAP Géostratégie · Yacine AOUABED · yaasap.github.io/yaasap-geostrategie<br>Ne constitue pas un conseil en investissement.</div>
 </footer>
