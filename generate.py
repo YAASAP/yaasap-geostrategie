@@ -44,7 +44,7 @@ DISCLAIMER = ("Ne constitue pas un conseil en investissement. "
 
 def _asset_version():
     h = hashlib.md5()
-    for n in ("style.css", "app.js", "acces.js", "banner.jpg"):
+    for n in ("style.css", "app.js", "acces.js", "banner.jpg", "banner-cartes.jpg"):
         f = ROOT / "assets" / n
         if f.exists():
             h.update(f.read_bytes())
@@ -213,8 +213,8 @@ ORB = """<svg class="orb" viewBox="0 0 300 300" aria-hidden="true">
   </svg>"""
 
 
-def banner(prefix, full=False):
-    return (f'<div class="banner glass{" full" if full else ""}"><img src="{prefix}assets/banner.jpg?v={ASSET_V}" width="1672" height="941" '
+def banner(prefix, full=False, img="banner.jpg", size=(1672, 941)):
+    return (f'<div class="banner glass{" full" if full else ""}"><img src="{prefix}assets/{img}?v={ASSET_V}" width="{size[0]}" height="{size[1]}" '
             'alt="YAASAP : analyses géostratégiques" fetchpriority="high"></div>')
 
 
@@ -558,7 +558,7 @@ def render_points(entries):
 <body>
 {masthead(prefix)}
 <div class="shell">
-{banner(prefix, full=True)}
+{banner(prefix, full=True, img="banner-cartes.jpg", size=(1399, 597))}
 <section class="hero glass home-hero">
   {ORB}
   <div class="hero-in">
