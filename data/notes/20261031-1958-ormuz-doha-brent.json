@@ -1,0 +1,114 @@
+{
+  "slug": "ormuz-doha-brent",
+  "published": "2026-10-31T19:58:00+01:00",
+  "nav": "Ormuz · Doha · Brent",
+  "title": "Ormuz : médiation à Doha, Brent à 118 $ et trafic en recul de 70 %",
+  "deck": "Le Qatar a vu Téhéran vendredi, une délégation iranienne est à Doha samedi. Aucune rencontre américano-iranienne n'est prévue, et le Brent atteint 118 $ à trois jours des élections américaines.",
+  "tags": [
+    {"t": "Iran", "hot": true},
+    {"t": "Ormuz"},
+    {"t": "Énergie"},
+    {"t": "Géostratégie"}
+  ],
+  "kpis": [
+    {"v": "118,07 $", "l": "Brent · 30 oct. · +2,3 % sur la journée", "cls": "am", "to": 118.07, "dec": 2, "suf": " $"},
+    {"v": "+18,7 %", "l": "Brent · variation sur un mois", "cls": "am", "to": 18.7, "dec": 1, "pre": "+", "suf": " %"},
+    {"v": "−70 %", "l": "Transits à Ormuz vs avant-guerre · sem. au 28 oct.", "cls": "dn"},
+    {"v": "2 à 5 j", "l": "Délai de réouverture discuté", "cls": "neu"},
+    {"v": "8 mois", "l": "Durée de la guerre · depuis le 28 févr.", "cls": "neu"},
+    {"v": "3 nov.", "l": "Élections américaines de mi-mandat", "cls": "am"}
+  ],
+  "kicker": [
+    {"l": "Brent il y a un an", "v": "64,69 $", "n": "Fortune"},
+    {"l": "Brent avant-guerre", "v": "≈ 70 $", "n": "Gulf News, avril 2026"},
+    {"l": "Blocus naval américain", "v": "13 avril", "n": "Wikipédia"},
+    {"l": "Protocole d'Islamabad", "v": "17 juin", "n": "60 jours de négociation"},
+    {"l": "Effondrement de la trêve", "v": "8 juillet", "n": "Wikipédia"},
+    {"l": "Transits · sem. au 28/10", "v": "155 / 122", "n": "entrants / sortants"},
+    {"l": "Médiateurs actifs", "v": "Qatar · Pakistan", "n": "Oman sur les routes maritimes"}
+  ],
+  "lead": {
+    "hl": "Les médiateurs s'activent, le Brent grimpe : le marché n'achète pas encore la désescalade",
+    "deck": "Des responsables qataris ont mené de longues discussions à Téhéran vendredi, puis une délégation iranienne s'est rendue à Doha. Washington dément toute reprise officielle des pourparlers, et Téhéran affirme tenir ses forces au plus haut niveau de préparation."
+  },
+  "blocks": [
+    {"type": "sec", "title": "Où en est la médiation · Doha, Téhéran, Islamabad"},
+    {"type": "p", "html": "Selon Al Jazeera, des hauts responsables <strong>qataris</strong> ont tenu de longs entretiens à Téhéran le <strong>vendredi 30 octobre</strong>, avec d'autres échanges prévus samedi. Une <strong>délégation iranienne</strong> est ensuite arrivée à Doha, et un collaborateur du ministre des Affaires étrangères y reste pour poursuivre les consultations. Abbas Araghchi juge l'initiative américaine « un pas positif », mais affirme qu'<strong>aucune rencontre avec des responsables américains n'est prévue</strong> et parle de pure spéculation médiatique."},
+    {"type": "p", "html": "Le point de friction est une <strong>lettre du vice-président JD Vance</strong>, reçue par Téhéran selon les médias iraniens. Les deux capitales n'en font pas la même lecture : <strong>Donald Trump</strong> rejette les informations sur un ordre de reprise des pourparlers et affirme que la lettre portait sur l'acheminement de fournitures médicales vers l'Iran. Son contenu exact n'est pas public."},
+    {"type": "pull", "t": "« Red lines are a thing of the past. »", "a": "Abbas Araghchi, ministre iranien des Affaires étrangères · Al Jazeera, 31 octobre 2026"},
+
+    {"type": "sec", "title": "Ce que chacun demande · conditions croisées"},
+    {"type": "table", "title": "Dossiers en discussion", "cols": ["Dossier", "Position iranienne", "Côté américain (sources non précisées)", "Statut"],
+     "rows": [
+       ["Détroit d'Ormuz", "Réouverture en quelques jours ; reconnaissance des routes discutées avec Oman, fermeture des autres", "Les États-Unis fournissent couverture et guidage à un système de navettes pétrolières hors du détroit", "<span class=\"b-am\">Délai 2 à 5 jours</span>"],
+       ["Blocus naval", "Levée du blocus américain des ports iraniens", "Pas de position publique rapportée", "<span class=\"b-dn\">Bloqué</span>"],
+       ["Sanctions et fonds", "Levée des sanctions postérieures au mémorandum d'Islamabad, dérogations pétrolières, déblocage des fonds gelés (y compris au Qatar)", "Non précisé", "<span class=\"b-dn\">Bloqué</span>"],
+       ["Nucléaire", "Examen en « deuxième phase » ; refus d'expédier l'uranium très enrichi à l'étranger", "Engagements nucléaires, accès d'inspecteurs internationaux, sort de l'uranium très enrichi", "<span class=\"b-am\">Renvoyé à la phase 2</span>"],
+       ["Volet régional", "Trêve dans les conflits régionaux, dont le Liban ; réduction des forces américaines dans la région", "Non précisé", "<span class=\"b-dn\">Bloqué</span>"]
+     ],
+     "src": "Sources : Al Jazeera, 31/10/2026 (deux articles). Les exigences américaines proviennent de sources non nommées citées par Al Jazeera ; aucune n'est confirmée officiellement."},
+    {"type": "p", "html": "Sur le calendrier, le <strong>Qatar</strong> a proposé de ramener à <strong>5 jours</strong> le délai de mise en œuvre de la proposition iranienne, et Téhéran dit avoir obtenu une formule à <strong>2 jours</strong>. Aucune date de réunion n'est fixée : selon Araghchi, des négociations directes ou indirectes dépendront de la satisfaction des conditions de l'Iran."},
+
+    {"type": "sec", "title": "Pétrole · le Brent à 118 $, +82 % sur un an"},
+    {"type": "chart", "title": "Brent · étapes récentes ($ le baril)", "kind": "bar", "unit": "$ le baril",
+     "labels": ["Oct. 2025", "Fév. 2026 (≈)", "Il y a 1 mois", "29 oct. 2026", "30 oct. 2026"],
+     "datasets": [{"label": "Brent", "data": [64.69, 70, 99.47, 115.40, 118.07]}],
+     "src": "Sources : Fortune, 30/10/2026 à 8 h 15 (heure de l'Est) pour les quatre cours précis ; Gulf News (avril 2026) pour l'ordre de grandeur d'environ 70 $ avant la guerre."},
+    {"type": "p", "html": "Le <strong>Brent</strong> cotait <strong>118,07 $</strong> le 30 octobre, contre 115,40 $ la veille, soit <strong>+2,3 %</strong> sur la journée, <strong>+18,7 %</strong> sur un mois et <strong>+82,5 %</strong> sur un an. Fortune n'explique pas le mouvement du jour. Notre lecture : il est cohérent avec une prime de risque entretenue par l'absence de calendrier de négociation et par les incidents en mer, plutôt qu'avec un pari sur une réouverture rapide."},
+
+    {"type": "sec", "title": "Ormuz · trafic en recul de 70 % et incidents contestés"},
+    {"type": "p", "html": "D'après le suivi maritime cité par Al Jazeera, <strong>155 transits entrants et 122 sortants</strong> ont été comptés pour la semaine achevée le 28 octobre, soit environ <strong>70 % de moins qu'avant la guerre</strong>. Le UKMTO signale le 30 octobre une nouvelle méthode : une petite embarcation a fixé <strong>deux explosifs</strong> sur la coque d'un pétrolier près de Khasab, à Oman. La télévision d'État iranienne affirme que <strong>six pétroliers</strong> ont été endommagés par des mines, sans vérification indépendante."},
+    {"type": "p", "html": "Les versions s'opposent. Le commandant du CENTCOM, Brad Cooper, dit ne pas avoir observé les Gardiens de la révolution dans le détroit. Par ailleurs, un drone américain a touché le 31 octobre <strong>deux bateaux de pêche</strong> au sud de l'île de Qeshm, blessant plusieurs pêcheurs, selon Al Jazeera. <strong>Ces incidents ne sont pas établis de façon concordante</strong> ; ils sont rapportés, pas confirmés."},
+
+    {"type": "sec", "title": "Les positions · chacun lit la séquence à sa façon"},
+    {"type": "pos", "items": [
+      {"h": "Iran", "p": "Le guide suprême Mojtaba Khamenei, qui a succédé à son père tué en mars, exige une « dissuasion maximale » et une riposte immédiate, sans limite géographique, si l'Iran est de nouveau attaqué. Le porte-parole de l'armée, Mohammad Akraminia, avertit que la guerre pourrait gagner une zone plus large. Araghchi affirme que les forces sont au plus haut niveau de préparation.", "by": "Al Jazeera, 31/10/2026"},
+      {"h": "États-Unis", "p": "Trump nie un ordre de reprise des pourparlers et décrit la lettre Vance comme relative à des fournitures médicales. Des rapports font état de frappes américaines et israéliennes imminentes, sans confirmation officielle. Washington assure par ailleurs couverture et guidage à un système de navettes pétrolières.", "by": "Al Jazeera, 31/10/2026"},
+      {"h": "Qatar · Pakistan · Oman", "p": "Doha mène la médiation active et a proposé de raccourcir le délai de réouverture. Le Pakistan, parrain du cessez-le-feu d'avril et du mémorandum d'Islamabad, poursuit ses consultations sur les conditions iraniennes. Oman est cité pour les routes maritimes que Téhéran veut faire reconnaître.", "by": "Al Jazeera, 31/10/2026"},
+      {"h": "Voix critiques à Washington", "p": "L'ancien sénateur Chris Murphy juge le plan militaire américain très dangereux, et l'analyste Eric Brewer estime que les risques de l'opération dépassent largement les gains. Un éditorial du quotidien iranien Jomhouri-e Eslami juge possibles des combats après les élections américaines du 3 novembre.", "by": "Al Jazeera, 31/10/2026"}
+    ]},
+
+    {"type": "sec", "title": "Repères · cliquez sur une date"},
+    {"type": "timeline", "title": "Huit mois de guerre, une trêve effondrée",
+     "events": [
+       ["28 févr.", "Début de la guerre", "Frappes israélo-américaines contre l'Iran ; le guide suprême Ali Khamenei est tué, son fils Mojtaba lui succède en mars. L'Iran riposte et ferme le détroit d'Ormuz. (Wikipédia, Al Jazeera)"],
+       ["7-8 avr.", "Premier cessez-le-feu", "Trêve de deux semaines parrainée par le Pakistan, annoncée le 7 avril et effective le 8. (Wikipédia)"],
+       ["11-12 avr.", "Pourparlers d'Islamabad", "Ils échouent après environ 21 heures de négociations. (Wikipédia)"],
+       ["13 avr.", "Blocus naval américain", "Washington impose un blocus naval de l'Iran ; le cessez-le-feu est prolongé sans limite le 21 avril, blocus maintenu. (Wikipédia)"],
+       ["17 juin", "Protocole d'Islamabad", "Les présidents américain et iranien signent un mémorandum fixant 60 jours pour négocier les termes finaux. (Wikipédia)"],
+       ["8 juil.", "Effondrement de la trêve", "Après des attaques des deux camps, les combats reprennent. (Wikipédia)"],
+       ["30 oct.", "Qatar à Téhéran", "De hauts responsables qataris mènent de longues discussions à Téhéran. (Al Jazeera)"],
+       ["31 oct.", "Délégation iranienne à Doha", "Téhéran étudie la lettre Vance et pose ses conditions ; aucune rencontre avec Washington n'est annoncée. (Al Jazeera)"],
+       ["3 nov.", "Élections américaines", "Scrutin de mi-mandat, à venir. Un éditorial iranien le présente comme une échéance après laquelle l'escalade serait possible. (Al Jazeera)"]
+     ]},
+
+    {"type": "sec", "title": "Trois scénarios nommés · lecture YAASAP"},
+    {"type": "pos", "items": [
+      {"h": "Réouverture encadrée", "p": "Un échange publié entre réouverture d'Ormuz dans un délai de 2 à 5 jours et levée du blocus, avec le nucléaire renvoyé à une phase 2. Signal : un calendrier écrit et des transits hebdomadaires en nette hausse. Effet attendu sur le Brent : détente de la prime de risque.", "by": "Scénario YAASAP · aucune probabilité chiffrée, faute de donnée"},
+      {"h": "Statu quo armé", "p": "Médiation sans accord, trafic à environ 30 % de la normale, incidents sporadiques sur tankers. Signal : consultations de Doha prolongées sans date de rencontre. Effet : Brent maintenu à un niveau élevé et volatil.", "by": "Scénario YAASAP · aucune probabilité chiffrée, faute de donnée"},
+      {"h": "Reprise des frappes", "p": "Escalade évoquée par des rapports et par la presse iranienne après le 3 novembre, avec riposte annoncée sans limite géographique. Signal : mouvements militaires confirmés ou rupture formelle de la médiation. Effet : choc d'offre supplémentaire sur l'énergie et le fret.", "by": "Scénario YAASAP · aucune probabilité chiffrée, faute de donnée"}
+    ]},
+
+    {"type": "sec", "title": "Marchés · trois canaux à surveiller"},
+    {"type": "p", "html": "<strong>1. L'énergie.</strong> Le Brent à 118 $ est supérieur d'environ <strong>50 $</strong> à son niveau d'octobre 2025 ; chaque annonce sur le délai de réouverture déplacera la prime de risque. <strong>2. Le transport maritime.</strong> Les attaques rapportées sur des pétroliers pèsent sur l'assurance et le fret ; nous n'avons pas trouvé de donnée de prime d'assurance datée d'octobre. <strong>3. Le calendrier politique américain.</strong> Le scrutin du 3 novembre est la prochaine échéance, citée par la presse iranienne comme point de bascule possible."}
+  ],
+  "verdict": {
+    "hl": "Pas de rendez-vous, des conditions croisées et un Brent à 118 $ : la désescalade n'est pas acquise. Verdict : <strong>Attendre</strong>.",
+    "items": [
+      "<strong>Attendre</strong> un calendrier écrit de réouverture d'Ormuz (2 à 5 jours discutés) avant de parier sur une détente du Brent.",
+      "<strong>Condition d'invalidation de la prudence</strong> : un accord publié échangeant réouverture contre levée du blocus ferait basculer la lecture vers la détente.",
+      "<strong>Catalyseur principal</strong> : l'issue des consultations de Doha, puis le scrutin américain du 3 novembre.",
+      "<strong>Risque principal</strong> : une reprise des frappes, évoquée par des rapports et par un avertissement iranien de riposte sans limite géographique.",
+      "<strong>Indicateur à suivre</strong> : les transits hebdomadaires (155 entrants, 122 sortants au 28 octobre) et les incidents sur tankers.",
+      "<strong>Périmètre</strong> : ce verdict porte sur le risque et les marchés. YAASAP ne prend pas parti sur le fond du conflit."
+    ]
+  },
+  "sources": [
+    {"t": "Al Jazeera · Araghchi, délégation à Doha (31/10/2026)", "u": "https://www.aljazeera.com/news/2026/10/31/iran-fm-says-us-outreach-a-positive-step-as-delegation-in-qatar-for-talks"},
+    {"t": "Al Jazeera · avertissement iranien et médiation (31/10/2026)", "u": "https://www.aljazeera.com/news/2026/10/31/iran-warns-of-unfettered-retaliation-if-attacked-as-mediators-try-for-peace"},
+    {"t": "Fortune · prix du pétrole (30/10/2026)", "u": "https://fortune.com/article/price-of-oil-10-30-2026/"},
+    {"t": "Wikipédia · cessez-le-feu de la guerre d'Iran 2026", "u": "https://en.wikipedia.org/wiki/2026_Iran_war_ceasefire"},
+    {"t": "Gulf News (avril 2026)", "u": "https://gulfnews.com/world/americas/trump-not-satisfied-with-irans-latest-proposal-to-reopen-hormuz-end-the-war-1.500521380"}
+  ],
+  "sources_note": "Les chiffres de trafic et les incidents sur tankers viennent d'un suivi maritime, du UKMTO et d'un média d'État iranien, sans vérification indépendante croisée. La chronologie avant octobre repose sur Wikipédia, qui signale elle-même des mises à jour à faire. La lettre Vance est décrite différemment par Téhéran et par Trump. Le cours « il y a un mois » est celui fourni par Fortune."
+}

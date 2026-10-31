@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YAASAP Géostratégie · analyses géostratégiques indépendantes</title>
+<meta name="description" content="Une analyse géostratégique indépendante toutes les 2 heures : faits sourcés, positions des acteurs, risques et canaux de marché. Par Yacine AOUABED.">
+<link rel="canonical" href="https://yaasap.github.io/yaasap-geostrategie/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="YAASAP Géostratégie · analyses géostratégiques indépendantes">
+<meta property="og:description" content="Une analyse géostratégique indépendante toutes les 2 heures : faits sourcés, positions des acteurs, risques et canaux de marché. Par Yacine AOUABED.">
+<meta property="og:url" content="https://yaasap.github.io/yaasap-geostrategie/">
+<meta name="robots" content="index,follow">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Source+Sans+3:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="page">
+<div class="masthead">
+  <a class="pub-name" href="./index.html" style="text-decoration:none">YAASAP <em>Géostratégie</em></a>
+  <div class="mast-r"><span class="mast-date" id="mastDate"></span><div id="qr-mast"></div></div>
+</div>
+<div class="shell">
+<section class="hero glass home-hero">
+  <svg class="orb" viewBox="0 0 300 300" aria-hidden="true">
+    <defs><radialGradient id="og" cx="38%" cy="34%" r="75%">
+      <stop offset="0" stop-color="#c9a96a" stop-opacity=".55"/><stop offset=".6" stop-color="#5d6038" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#14120a" stop-opacity=".12"/></radialGradient></defs>
+    <circle cx="150" cy="150" r="118" fill="url(#og)" stroke="#e9d6a0" stroke-opacity=".55"/>
+    <g class="spin" fill="none" stroke="#f1e4c3" stroke-opacity=".35" stroke-width=".8">
+      <ellipse cx="150" cy="150" rx="118" ry="38"/><ellipse cx="150" cy="150" rx="118" ry="78"/>
+      <ellipse cx="150" cy="150" rx="40" ry="118"/><ellipse cx="150" cy="150" rx="82" ry="118"/></g>
+    <g class="spin2" fill="none" stroke="#d9b873" stroke-opacity=".6" stroke-width="1" stroke-dasharray="2 7">
+      <circle cx="150" cy="150" r="138"/><circle cx="150" cy="150" r="148"/></g>
+    <g fill="#fbf3dc"><circle cx="104" cy="108" r="2.2"/><circle cx="168" cy="92" r="1.8"/><circle cx="196" cy="140" r="2.4"/>
+      <circle cx="134" cy="176" r="1.8"/><circle cx="176" cy="198" r="2"/><circle cx="92" cy="156" r="1.6"/></g>
+    <g stroke="#f1e4c3" stroke-opacity=".5" stroke-width=".8" fill="none">
+      <path d="M104 108 L168 92 L196 140 L176 198 L134 176 L92 156 Z"/><path d="M168 92 L134 176"/></g>
+  </svg>
+  <div class="hero-in">
+    <div class="eyebrow"><span class="tag">Géostratégie</span><span class="tag">Indépendant</span><span class="tag">Toutes les 2 h</span></div>
+    <h1>Une analyse géostratégique indépendante, toutes les 2 heures</h1>
+    <p class="deck">Faits sourcés, positions de chaque acteur, risques et canaux de marché. Même format que YAASAP Notes : chiffres d'abord, verdict tranché, sources citées.</p>
+    <div class="home-meta"><span class="tag hot">Dernière analyse · 31 oct. 2026 19:58</span><span class="tag">1 analyse publiée</span></div>
+  </div>
+</section>
+<div class="wrap" id="archives">
+  <div class="sec-rule"><span class="sec-rule-txt">Dernières analyses</span></div>
+  <div class="ncards">
+<a class="ncard glass" href="notes/20261031-1958-ormuz-doha-brent.html"><div class="eyebrow"><span class="tag hot">Iran</span><span class="tag">Ormuz</span><span class="tag">Énergie</span><span class="tag">Géostratégie</span></div><h2>Ormuz : médiation à Doha, Brent à 118 $ et trafic en recul de 70 %</h2><p>Le Qatar a vu Téhéran vendredi, une délégation iranienne est à Doha samedi. Aucune rencontre américano-iranienne n&#x27;est prévue, et le Brent atteint 118 $ à trois jours des élections américaines.</p><div class="nc-d">31 octobre 2026 · 19:58</div></a>
+  </div>
+  <div class="nl glass">
+    <div class="nl-hl">Recevoir les prochaines analyses YAASAP</div>
+    <div class="nl-row">
+      <input class="nl-input" type="email" id="nlEmail" placeholder="votre@email.com">
+      <button class="nl-btn" onclick="nlSubmit()">S'ABONNER →</button>
+    </div>
+    <div class="nl-ok" id="nlOk">✓ Inscrit — vérifiez votre boite mail</div>
+  </div>
+</div>
+</div>
+<footer>
+  <div class="f-nav">
+    <a href="./index.html">Accueil</a>
+    <a href="./notes/20261031-1958-ormuz-doha-brent.html">Ormuz · Doha · Brent</a>
+    <a href="./index.html#archives">Archives</a>
+    <a href="https://yaasap.github.io/dailywatch/">YAASAP Notes</a>
+  </div>
+  <div class="f-note">YAASAP Géostratégie · Yacine AOUABED · yaasap.github.io/yaasap-geostrategie<br>Ne constitue pas un conseil en investissement.</div>
+</footer>
+</div>
+<script>window.NOTE_META={"dateShort":""};window.NOTE_CHARTS=[];window.NOTE_TIMELINES=[];</script>
+<script src="assets/app.js"></script>
+</body>
+</html>
