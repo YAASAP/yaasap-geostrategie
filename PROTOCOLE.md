@@ -84,7 +84,7 @@ La commande affiche `ARCHIVÉ …` pour la nouvelle note et `OK … (verrouillé
 
 1. Relire le HTML produit (titres, chiffres, liens). Corriger le JSON puis régénérer si besoin.
 2. **Dépôt privé d'abord** : dans `yaasap-geostrategie-prive`, `git add notes/`, commit `Analyse (source) : <titre court>`, `git pull --rebase origin main`, `git push origin HEAD:main`. 
-3. **Dépôt public ensuite** : `git pull --rebase origin main`, puis `git add -A data notes index.html abonnement.html sitemap.xml robots.txt`. Le JSON de la nouvelle note ne doit PAS figurer dans le dépôt public (vérifier `git status`).
+3. **Dépôt public ensuite** : `git pull --rebase origin main`, puis `git add -A data notes index.html abonnement.html points-strategiques.html sitemap.xml robots.txt`. Le JSON de la nouvelle note ne doit PAS figurer dans le dépôt public (vérifier `git status`).
 4. Commit en français, une ligne : `Analyse : <titre court>` (plus les lignes d'attribution demandées par la session).
 5. `git push origin HEAD:main`. En cas de refus « behind » : `git pull --rebase origin main` puis repousser une fois.
 6. Résultat attendu : `https://yaasap.github.io/yaasap-geostrategie/notes/<fichier>.html` en ligne après 1 à 2 minutes (GitHub Pages).

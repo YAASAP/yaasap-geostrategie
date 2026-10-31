@@ -1,0 +1,137 @@
+[
+ {
+  "id": "ormuz",
+  "nom": "Détroit d'Ormuz",
+  "mer": "Golfe Persique ↔ golfe d'Oman",
+  "pays": [
+   "Iran",
+   "Oman",
+   "Émirats arabes unis"
+  ],
+  "regime": "Passage en transit (CNUDM, partie III) par les eaux territoriales d'Oman et d'Iran ; dispositif de séparation du trafic en eaux omanaises. L'Iran a signé la convention sans la ratifier et les États-Unis n'y sont pas partie : le droit de passage y est contesté en pratique.",
+  "petrole": 20.9,
+  "gnl": 11.4,
+  "poids": "≈ 20 % de la consommation mondiale de liquides pétroliers, environ un quart du pétrole maritime ; environ 19 % du commerce mondial de gaz naturel.",
+  "hors": "GNL (11,4 Gpi³/j) et autres marchandises du Golfe, conteneurs et vrac compris.",
+  "alt": "Oléoducs Est-Ouest (Arabie saoudite) et d'Abou Dhabi : ≈ 4,7 mb/j de capacité, très inférieure aux flux.",
+  "tension": "Critique",
+  "lecture": "Trafic très inférieur à l'avant-guerre : voir l'analyse sur Ormuz."
+ },
+ {
+  "id": "malacca",
+  "nom": "Détroit de Malacca",
+  "mer": "Océan Indien ↔ mer de Chine méridionale",
+  "pays": [
+   "Indonésie",
+   "Malaisie",
+   "Singapour"
+  ],
+  "regime": "Passage en transit (CNUDM) ; les trois États riverains assurent la sécurité et la surveillance du trafic.",
+  "petrole": 23.2,
+  "gnl": 9.2,
+  "poids": "29 % des flux pétroliers maritimes : premier passage du monde par le volume ; 24 % du commerce maritime mondial toutes marchandises.",
+  "hors": "Conteneurs Asie–Europe, 26 % des voitures transportées par mer, GNL (9,2 Gpi³/j).",
+  "alt": "Détroits de Lombok et de la Sonde (plus longs, plus profonds).",
+  "tension": "Structurel",
+  "lecture": "La Chine absorbe 48 % des volumes pétroliers : dépendance stratégique plus que menace immédiate."
+ },
+ {
+  "id": "suez",
+  "nom": "Canal de Suez et SUMED",
+  "mer": "Méditerranée ↔ mer Rouge",
+  "pays": [
+   "Égypte"
+  ],
+  "regime": "Convention de Constantinople (1888) : libre passage en tout temps ; l'Égypte exploite le canal et perçoit les péages. L'oléoduc SUMED (2,5 mb/j) contourne le canal.",
+  "petrole": 4.9,
+  "gnl": 0.9,
+  "poids": "10 % du commerce maritime mondial ; flux pétroliers en baisse : 8,8 mb/j (2023) → 4,8 mb/j (2024).",
+  "hors": "Conteneurs et véhicules Asie–Europe ; passages de navires divisés par deux, d'environ 26 000 (2023) à 13 000 (2024).",
+  "alt": "Cap de Bonne-Espérance, au prix d'un détour de plusieurs jours de mer.",
+  "tension": "Élevée",
+  "lecture": "Dépend de la sécurité en mer Rouge : revenus égyptiens et prix du fret suivent le risque houthi."
+ },
+ {
+  "id": "babelmandeb",
+  "nom": "Bab el-Mandeb",
+  "mer": "Mer Rouge ↔ golfe d'Aden",
+  "pays": [
+   "Yémen",
+   "Djibouti",
+   "Érythrée"
+  ],
+  "regime": "Détroit international soumis au droit de passage en transit ; des puissances étrangères y entretiennent des bases à Djibouti.",
+  "petrole": 4.2,
+  "gnl": 0.0,
+  "poids": "Avec Suez, ≈ 6 % du pétrole maritime ; flux de 9,3 mb/j (2023) à 4,1 mb/j (2024) après les attaques houthies.",
+  "hors": "Conteneurs et vrac à destination de Suez ; aucun GNL.",
+  "alt": "Cap de Bonne-Espérance.",
+  "tension": "Élevée",
+  "lecture": "Les attaques contre la navigation depuis novembre 2023 ont déplacé les routes vers le Cap."
+ },
+ {
+  "id": "turcs",
+  "nom": "Détroits turcs (Bosphore et Dardanelles)",
+  "mer": "Mer Noire ↔ Méditerranée",
+  "pays": [
+   "Türkiye"
+  ],
+  "regime": "Convention de Montreux (1936) : libre passage des navires marchands en temps de paix, régime restrictif pour les navires de guerre, que la Türkiye peut limiter en cas de conflit. Le transit de GNL par le Bosphore est interdit.",
+  "petrole": 3.7,
+  "gnl": 0.6,
+  "poids": "≈ 5 % du commerce maritime mondial ; environ 60 % du flux est du brut (Kazakhstan premier exportateur).",
+  "hors": "Céréales de mer Noire, métaux, produits agricoles. Chiffres : Dardanelles 3,7 mb/j, Bosphore 3,3 mb/j.",
+  "alt": "Oléoducs régionaux et ports de la mer Noire (capacité limitée).",
+  "tension": "Surveillé",
+  "lecture": "Guerre Russie–Ukraine : risque sur les exportations de céréales et de brut."
+ },
+ {
+  "id": "danois",
+  "nom": "Détroits danois",
+  "mer": "Baltique ↔ mer du Nord",
+  "pays": [
+   "Danemark",
+   "Suède"
+  ],
+  "regime": "Libre passage garanti depuis la Convention de Copenhague (1857) ; le canal de Kiel (Allemagne) offre une alternative secondaire (≈ 0,2 mb/j).",
+  "petrole": 4.9,
+  "gnl": 1.6,
+  "poids": "≈ 6 % du commerce maritime mondial ; flux en hausse de ≈ 60 % depuis 2021, porté par le déplacement du commerce russe.",
+  "hors": "GNL (1,6 Gpi³/j), vrac, conteneurs de la Baltique.",
+  "alt": "Canal de Kiel (limité).",
+  "tension": "Surveillé",
+  "lecture": "Exportations russes de la Baltique et incidents sur les infrastructures sous-marines."
+ },
+ {
+  "id": "panama",
+  "nom": "Canal de Panama",
+  "mer": "Atlantique ↔ Pacifique",
+  "pays": [
+   "Panama"
+  ],
+  "regime": "Traité de neutralité permanente (1977) : ouvert à tous les navires ; géré par l'Autorité du canal de Panama, qui fixe tirants d'eau et péages.",
+  "petrole": 2.3,
+  "gnl": 0.3,
+  "poids": "≈ 3 % des flux pétroliers maritimes (produits raffinés surtout, 2,2 mb/j) ; ≈ 2,5 % du commerce maritime mondial ; ≈ 40 % des conteneurs à destination des États-Unis.",
+  "hors": "Conteneurs et GNL américains vers l'Asie (GNL tombé de ≈ 2,5 Gpi³/j en 2021 à moins de 0,3).",
+  "alt": "Oléoduc transpanaméen (0,4 mb/j sur 0,86 de capacité) ; routes par Suez ou le cap Horn.",
+  "tension": "Modérée",
+  "lecture": "Disponibilité en eau et rivalité sino-américaine autour des ports du canal."
+ },
+ {
+  "id": "cap",
+  "nom": "Cap de Bonne-Espérance",
+  "mer": "Atlantique ↔ océan Indien",
+  "pays": [
+   "Afrique du Sud"
+  ],
+  "regime": "Haute mer : pas un goulet, liberté de navigation ; route de contournement de Suez.",
+  "petrole": 9.1,
+  "gnl": 5.7,
+  "poids": "≈ 11 % du pétrole maritime ; flux de brut de 6,1 mb/j (2022) à 9,1 mb/j (1S 2025) ; plus de 40 % du brut qui y passe va vers la Chine.",
+  "hors": "Conteneurs déroutés depuis Suez ; GNL (5,7 Gpi³/j).",
+  "alt": "Sans objet : c'est l'alternative.",
+  "tension": "Refuge",
+  "lecture": "Monte en charge à chaque crise en mer Rouge."
+ }
+]

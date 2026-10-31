@@ -235,6 +235,7 @@ def footer(prefix, recent):
     <a href="{prefix}index.html">Accueil</a>
     {links}
     <a href="{prefix}index.html#archives">Analyses abonnés</a>
+    <a href="{prefix}points-strategiques.html">Points stratégiques</a>
     <a href="{prefix}abonnement.html">Abonnement</a>
     <a href="{MAIN_SITE}/">YAASAP Notes</a>
   </div>
@@ -454,6 +455,7 @@ def render_index(entries):
   </div>
 </section>
 <div class="wrap">
+  <div class="cta-band glass pts-band"><div><div class="cta-t">Carte des points stratégiques</div><div class="cta-s">Ormuz, Malacca, Suez, Bab el-Mandeb… : pays riverains, droits de passage, trafic pétrolier et hors pétrole. Accès libre.</div></div><div class="cta-b"><a class="btn-ghost" href="points-strategiques.html">Voir la carte</a></div></div>
   <div class="sec-rule"><span class="sec-rule-txt">Analyse offerte · accès libre</span></div>
   <div class="ncards">
 {cards_html}
@@ -481,12 +483,104 @@ def site_ld():
 
 
 def write_seo(entries):
-    urls = [(f"{SITE}/", max((x["published"] for x in entries), default=None)), (f"{SITE}/abonnement.html", None)]
+    urls = [(f"{SITE}/", max((x["published"] for x in entries), default=None)), (f"{SITE}/abonnement.html", None), (f"{SITE}/points-strategiques.html", None)]
     urls += [(f"{SITE}/notes/{x['file']}", x["published"]) for x in entries]
     body = "".join(f"<url><loc>{e(u)}</loc>" + (f"<lastmod>{d[:10]}</lastmod>" if d else "") + "</url>" for u, d in urls)
     (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
                                       + body + "</urlset>\n", encoding="utf-8")
     (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n", encoding="utf-8")
+
+
+def render_points(entries):
+    prefix = "./"
+    pts = json.loads((ROOT / "data" / "points.json").read_text(encoding="utf-8"))
+    mp = json.loads((ROOT / "data" / "carte.json").read_text(encoding="utf-8"))
+    canonical = f"{SITE}/points-strategiques.html"
+    desc = ("Carte et fiches des points de passage stratégiques du commerce mondial : Ormuz, Malacca, Suez, Bab el-Mandeb, "
+            "détroits turcs et danois, Panama, Cap. Pays riverains, droits de passage, trafic pétrolier et hors pétrole.")
+    head = page_head("YAASAP Géostratégie · points stratégiques et droits de passage", desc, canonical,
+                     "Points stratégiques : pétrole, GNL et trafic maritime", {
+                         "@context": "https://schema.org", "@type": "Article", "headline": "Points stratégiques : pays, droits de passage et trafic maritime",
+                         "description": desc, "inLanguage": "fr", "author": {"@type": "Person", "name": "Yacine AOUABED"},
+                         "mainEntityOfPage": canonical}).replace("{PREFIX}", prefix)
+    head = head.replace('<meta property="og:type" content="article">', '<meta property="og:type" content="website">')
+    marks = "".join(
+        f'<g class="mk t-{e(p["tension"].lower())}" data-id="{p["id"]}" tabindex="0"><circle class="halo" cx="{mp["points"][p["id"]][0]}" cy="{mp["points"][p["id"]][1]}" r="{8 + p["petrole"] * 0.55:.1f}"/>'
+        f'<circle class="dot" cx="{mp["points"][p["id"]][0]}" cy="{mp["points"][p["id"]][1]}" r="4.5"/>'
+        f'<text x="{mp["points"][p["id"]][0] + 11}" y="{mp["points"][p["id"]][1] + 4}">{e(p["nom"].split(" (")[0].replace("Détroit d\'", "").replace("Détroit de ", "").replace("Canal de ", "").replace("Canal de Suez et SUMED", "Suez"))}</text></g>'
+        for p in pts)
+    cards = "".join(
+        f'<article class="pcard glass" id="p-{p["id"]}"><div class="pc-h"><span class="tag t-{e(p["tension"].lower())}">{e(p["tension"])}</span><h3>{e(p["nom"])}</h3>'
+        f'<div class="pc-m">{e(p["mer"])}</div></div>'
+        f'<div class="pc-k"><div><b>{p["petrole"]:.1f}</b><span>mb/j pétrole</span></div><div><b>{p["gnl"]:.1f}</b><span>Gpi³/j GNL</span></div></div>'
+        f'<dl><dt>Pays riverains</dt><dd>{e(" · ".join(p["pays"]))}</dd>'
+        f'<dt>Droit de passage</dt><dd>{e(p["regime"])}</dd>'
+        f'<dt>Poids</dt><dd>{e(p["poids"])}</dd>'
+        f'<dt>Hors pétrole</dt><dd>{e(p["hors"])}</dd>'
+        f'<dt>Contournement</dt><dd>{e(p["alt"])}</dd>'
+        f'<dt>Lecture YAASAP</dt><dd>{e(p["lecture"])}</dd></dl></article>'
+        for p in pts)
+    oil = sorted(
+        [("Malacca", 23.2), ("Ormuz", 20.9), ("Cap de Bonne-Espérance", 9.1), ("Suez + SUMED", 4.9), ("Détroits danois", 4.9),
+         ("Bab el-Mandeb", 4.2), ("Dardanelles", 3.7), ("Bosphore", 3.3), ("Panama (exercice 2025)", 2.3)], key=lambda x: -x[1])
+    lng = [("Ormuz", 11.4), ("Malacca", 9.2), ("Cap de Bonne-Espérance", 5.7), ("Détroits danois", 1.6), ("Suez + SUMED", 0.9), ("Dardanelles", 0.6)]
+    charts, timelines, toc = [], [], []
+    blocks = [
+        {"type": "chart", "title": "Pétrole transitant par chaque point · millions de barils par jour (1er semestre 2025)", "kind": "bar",
+         "labels": [x[0] for x in oil], "datasets": [{"label": "mb/j", "data": [x[1] for x in oil]}], "unit": "mb/j",
+         "src": "EIA, World Oil Transit Chokepoints (mise à jour 3 mars 2026), estimations fondées sur le suivi des pétroliers Vortexa. Avant la guerre actuelle : les flux d'Ormuz ont depuis chuté."},
+        {"type": "chart", "title": "GNL transitant par chaque point · milliards de pieds cubes par jour (1er semestre 2025)", "kind": "bar",
+         "labels": [x[0] for x in lng], "datasets": [{"label": "Gpi³/j", "data": [x[1] for x in lng]}], "unit": "Gpi³/j",
+         "src": "EIA, World Oil Transit Chokepoints (mise à jour 3 mars 2026)."},
+        {"type": "table", "title": "Poids de chaque point hors pétrole · part du commerce maritime mondial, toutes marchandises",
+         "cols": ["Point", "Part du commerce maritime", "Autres repères", "Source"],
+         "rows": [["Malacca", "24 %", "26 % des voitures transportées par mer", "UNCTAD (RMT 2024), via Down To Earth"],
+                  ["Suez", "10 %", "Passages : ≈ 26 000 (2023) → ≈ 13 000 (2024)", "UNCTAD ; The Conversation, via Down To Earth"],
+                  ["Détroits danois", "≈ 6 %", "Brut russe en hausse de ≈ 60 % depuis 2021", "EIA"],
+                  ["Détroits turcs", "≈ 5 %", "≈ 60 % du flux est du brut", "EIA"],
+                  ["Panama", "≈ 2,5 %", "≈ 40 % des conteneurs vers les États-Unis", "Down To Earth ; FMC (Congrès américain)"],
+                  ["Ormuz", "n.d.", "≈ 19 % du commerce mondial de gaz naturel", "UNCTAD (RMT 2024), via Down To Earth"]],
+         "src": "Les parts « toutes marchandises » incluent le pétrole ; elles ne sont pas strictement comparables d'une source à l'autre (périmètres UNCTAD et EIA différents)."},
+    ]
+    chart_html = render_blocks(blocks, charts, timelines, toc)
+    page = f"""{head}
+<body>
+{masthead(prefix)}
+<div class="shell">
+{banner(prefix)}
+<section class="hero glass home-hero">
+  {ORB}
+  <div class="hero-in">
+    <div class="eyebrow"><span class="tag hot">Cartes</span><span class="tag">Accès libre</span><span class="tag">Pétrole · GNL · commerce</span></div>
+    <h1>Points stratégiques, droits de passage et trafic maritime</h1>
+    <p class="deck">Huit passages dont dépend le commerce mondial : qui les borde, quel droit s'y applique, ce qu'ils transportent (pétrole, GNL, autres marchandises) et par où contourner.</p>
+  </div>
+</section>
+<div class="wrap wide">
+  <div class="mapbox glass">
+    <svg class="wmap" viewBox="0 0 {mp["w"]} {mp["h"]}" role="img" aria-label="Carte des points stratégiques maritimes">
+      <path class="land" d="{mp["land"]}"/>{marks}
+    </svg>
+    <div class="map-legend"><span><i class="lg lg-critique"></i>Critique</span><span><i class="lg lg-élevée"></i>Élevée</span><span><i class="lg lg-surveillé"></i>Surveillé</span><span><i class="lg lg-structurel"></i>Structurel</span><span><i class="lg lg-modérée"></i>Modérée</span><span><i class="lg lg-refuge"></i>Refuge</span><span class="lg-n">Taille du cercle : volume de pétrole</span></div>
+  </div>
+  <div class="sec-rule"><span class="sec-rule-txt">Fiche de chaque point</span></div>
+  <div class="pgrid">{cards}</div>
+  <div class="sec-rule"><span class="sec-rule-txt">Trafic pétrolier et hors pétrole</span></div>
+  {chart_html}
+  <div class="src">Sources : <a href="https://www.eia.gov/international/content/analysis/special_topics/World_Oil_Transit_Chokepoints" target="_blank" rel="noopener">EIA · World Oil Transit Chokepoints (3 mars 2026)</a> · <a href="https://www.downtoearth.org.in/economy/from-the-strait-of-hormuz-to-malacca-global-trade-relies-almost-entirely-on-these-five-narrow-waterways" target="_blank" rel="noopener">Down To Earth · chokepoints (18 mars 2026), d'après l'UNCTAD</a>. Les régimes juridiques sont rappelés d'après les conventions citées (CNUDM, Constantinople 1888, Montreux 1936, Copenhague 1857, traité de neutralité du Panama 1977). Les niveaux de tension sont la lecture de YAASAP, pas une donnée sourcée. Les flux d'Ormuz sont ceux d'avant la guerre actuelle : voir l'<a href="notes/20261031-1958-ormuz-doha-brent.html">analyse sur Ormuz</a>.</div>
+  <div class="v-disc" style="margin-top:18px">{e(DISCLAIMER)}</div>
+  {newsletter()}
+</div>
+</div>
+{footer(prefix, [{"file": x["file"], "nav": x["nav"]} for x in entries[:3]])}
+<script>window.YA_PREFIX="./";window.NOTE_META={{"dateShort":""}};window.NOTE_CHARTS={json.dumps(charts, ensure_ascii=False)};window.NOTE_TIMELINES=[];</script>
+<script src="assets/app.js?v={ASSET_V}"></script>
+<script src="assets/acces.js?v={ASSET_V}"></script>
+<script>(function(){{var m=document.querySelectorAll('.wmap .mk');function go(id){{var c=document.getElementById('p-'+id);if(!c)return;[].forEach.call(document.querySelectorAll('.pcard'),function(x){{x.classList.remove('on')}});c.classList.add('on');c.scrollIntoView({{behavior:'smooth',block:'center'}});}}[].forEach.call(m,function(g){{g.addEventListener('click',function(){{go(g.dataset.id)}});g.addEventListener('keydown',function(ev){{if(ev.key==='Enter')go(g.dataset.id)}});}});}})();</script>
+</body>
+</html>
+"""
+    (ROOT / "points-strategiques.html").write_text(page, encoding="utf-8")
 
 
 def cta_band():
@@ -607,6 +701,7 @@ def main(argv):
         print("OK  notes/%s.html%s" % (s, "  (verrouillée)" if s not in FREE else ""))
     render_index(entries)
     render_abonnement(entries)
+    render_points(entries)
     write_seo(entries)
     (ROOT / "data" / "index.json").write_text(json.dumps(entries, ensure_ascii=False, indent=1), encoding="utf-8")
     print("OK  index.html + abonnement.html (%d analyses)" % len(entries))
