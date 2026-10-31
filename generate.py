@@ -5,7 +5,7 @@ Usage :
     python3 generate.py data/notes/<fichier>.json     # rend une note, archive les précédentes, reconstruit l'accueil
     python3 generate.py --rebuild                     # reconstruit toutes les notes et l'accueil
 
-La dernière analyse est en accès libre ; les autres sont chiffrées (AES-GCM) avec la clé du dépôt
+Seule l'analyse offerte (FREE) est en accès libre ; les autres sont chiffrées (AES-GCM) avec la clé du dépôt
 privé et déplacées dans ce dépôt (dossier notes/). Nécessite le paquet « cryptography » dès qu'une
 note est verrouillée.
 
@@ -29,6 +29,8 @@ NOTES_DIR = ROOT / "notes"
 DATA_DIR = ROOT / "data" / "notes"
 SITE = "https://yaasap.github.io/yaasap-geostrategie"
 MAIN_SITE = "https://yaasap.github.io/dailywatch"
+# Seule analyse en accès libre (découverte) ; toutes les autres sont réservées aux abonnés
+FREE = {"20261031-1958-ormuz-doha-brent"}
 STRIPE_URL = "https://buy.stripe.com/cNi8wP6GHh0o5eWekCgIo0m"
 PRICE = "3 € / mois"
 # Dépôt privé : clé de chiffrement, abonnés et sources des analyses archivées
@@ -215,7 +217,7 @@ def footer(prefix, recent):
   <div class="f-nav">
     <a href="{prefix}index.html">Accueil</a>
     {links}
-    <a href="{prefix}index.html#archives">Archives</a>
+    <a href="{prefix}index.html#archives">Analyses abonnés</a>
     <a href="{prefix}abonnement.html">Abonnement</a>
     <a href="{MAIN_SITE}/">YAASAP Notes</a>
   </div>
@@ -269,7 +271,7 @@ def gate_html(prefix):
     return f"""<section class="gate glass" id="gate">
   <div class="gate-lock">🔒</div>
   <h2>Analyse réservée aux abonnés</h2>
-  <p>Cette analyse fait partie des archives. La dernière analyse publiée reste en accès libre ; toutes les archives sont accessibles aux abonnés pour {PRICE}.</p>
+  <p>L'analyse sur Ormuz est offerte en découverte ; toutes les autres analyses sont réservées aux abonnés ({PRICE}).</p>
   <div class="gate-cta"><a class="btn-gold" href="{STRIPE_URL}" target="_blank" rel="noopener">S'abonner · {PRICE}</a><a class="btn-ghost" href="{prefix}abonnement.html">Détails de l'abonnement</a></div>
   {login_form()}
 </section>"""
@@ -404,7 +406,7 @@ def render_index(entries):
     cards_html = "\n".join(card(n) for n in free) if free else '<div class="empty glass">Première analyse à venir.</div>'
     arch_html = ""
     if arch:
-        arch_html = ('<div class="sec-rule" id="archives"><span class="sec-rule-txt">Archives · réservées aux abonnés</span></div>\n'
+        arch_html = ('<div class="sec-rule" id="archives"><span class="sec-rule-txt">Analyses réservées aux abonnés</span></div>\n'
                      + cta_band() + '\n<div class="ncards">\n' + "\n".join(card(n) for n in arch) + '\n</div>')
     else:
         arch_html = '<div id="archives"></div>' + cta_band()
@@ -426,8 +428,8 @@ def render_index(entries):
     <div class="home-meta">{last}<span class="tag">{len(entries)} analyse{'s' if len(entries) > 1 else ''} publiée{'s' if len(entries) > 1 else ''}</span></div>
   </div>
 </section>
-<div class="wrap" id="archives">
-  <div class="sec-rule"><span class="sec-rule-txt">Dernière analyse · accès libre</span></div>
+<div class="wrap">
+  <div class="sec-rule"><span class="sec-rule-txt">Analyse offerte · accès libre</span></div>
   <div class="ncards">
 {cards_html}
   </div>
@@ -446,8 +448,8 @@ def render_index(entries):
 
 
 def cta_band():
-    return (f'<div class="cta-band glass"><div><div class="cta-t">Toutes les archives, pour {PRICE}</div>'
-            '<div class="cta-s">La dernière analyse reste en accès libre. Abonnez-vous pour lire chaque analyse précédente en entier.</div></div>'
+    return (f'<div class="cta-band glass"><div><div class="cta-t">Toutes les analyses, pour {PRICE}</div>'
+            '<div class="cta-s">Seule l\'analyse sur Ormuz est offerte. Abonnez-vous pour lire chaque analyse en entier, dès sa publication.</div></div>'
             f'<div class="cta-b"><a class="btn-gold" href="{STRIPE_URL}" target="_blank" rel="noopener">S\'abonner</a>'
             '<a class="btn-ghost" href="abonnement.html">Déjà abonné ?</a></div></div>')
 
@@ -455,8 +457,8 @@ def cta_band():
 def render_abonnement(entries):
     prefix = "./"
     head = page_head("YAASAP Géostratégie · abonnement",
-                     "Accès à toutes les archives des analyses géostratégiques YAASAP : 3 € par mois. "
-                     "La dernière analyse reste en accès libre.", f"{SITE}/abonnement.html").replace("{PREFIX}", prefix)
+                     "Accès à toutes les analyses géostratégiques YAASAP : 3 € par mois. "
+                     "L'analyse sur Ormuz est offerte en découverte.", f"{SITE}/abonnement.html").replace("{PREFIX}", prefix)
     head = head.replace('<meta property="og:type" content="article">', '<meta property="og:type" content="website">')
     n_arch = len([x for x in entries if x.get("locked")])
     arch_txt = (f" ({n_arch} à ce jour, une de plus toutes les 2 heures)" if n_arch else " : une de plus toutes les 2 heures")
@@ -469,16 +471,16 @@ def render_abonnement(entries):
   {ORB}
   <div class="hero-in">
     <div class="eyebrow"><span class="tag hot">Abonnement</span><span class="tag">{PRICE}</span></div>
-    <h1>Toutes les archives YAASAP Géostratégie</h1>
-    <p class="deck">La dernière analyse est toujours en accès libre. L'abonnement ouvre l'ensemble des analyses précédentes{arch_txt}.</p>
+    <h1>Toutes les analyses YAASAP Géostratégie</h1>
+    <p class="deck">L'analyse sur Ormuz est offerte en découverte. L'abonnement ouvre toutes les autres{arch_txt}.</p>
   </div>
 </section>
 <div class="wrap">
   <div class="offer glass">
     <div class="offer-p"><span class="offer-n">3 €</span><span class="offer-u">par mois, TTC</span></div>
     <ul class="offer-l">
-      <li>Accès à toutes les analyses archivées, en version complète : chiffres, graphiques, positions des acteurs, scénarios, verdict, sources</li>
-      <li>Les nouvelles analyses rejoignent vos archives automatiquement</li>
+      <li>Accès à toutes les analyses, en version complète : chiffres, graphiques, positions des acteurs, scénarios, verdict, sources</li>
+      <li>Chaque nouvelle analyse (toutes les 2 heures) est accessible dès sa publication</li>
       <li>Paiement sécurisé par Stripe</li>
     </ul>
     <a class="btn-gold btn-big" href="{STRIPE_URL}" target="_blank" rel="noopener">S'abonner · {PRICE}</a>
@@ -487,12 +489,12 @@ def render_abonnement(entries):
   <div class="steps">
     <div class="step glass"><span class="step-n">1</span><p>Abonnez-vous avec le bouton ci-dessus, en indiquant votre e-mail.</p></div>
     <div class="step glass"><span class="step-n">2</span><p>Vous recevez votre <strong>code d'accès personnel</strong> par e-mail, sous 24 h.</p></div>
-    <div class="step glass"><span class="step-n">3</span><p>Saisissez votre e-mail et votre code ci-dessous : les archives s'ouvrent sur cet appareil.</p></div>
+    <div class="step glass"><span class="step-n">3</span><p>Saisissez votre e-mail et votre code ci-dessous : les analyses s'ouvrent sur cet appareil.</p></div>
   </div>
   <div class="sec-rule"><span class="sec-rule-txt">Accès abonné</span></div>
   <div class="gate glass" id="loginBox">
     {login_form()}
-    <div class="login-ok" id="lgOk"><strong>✓ Accès activé.</strong> <a href="index.html#archives">Ouvrir les archives →</a> · <a href="#" id="logout">Se déconnecter</a></div>
+    <div class="login-ok" id="lgOk"><strong>✓ Accès activé.</strong> <a href="index.html#archives">Ouvrir les analyses →</a> · <a href="#" id="logout">Se déconnecter</a></div>
   </div>
   <div class="v-disc" style="margin-top:18px">{e(DISCLAIMER)}</div>
 </div>
@@ -544,8 +546,8 @@ def main(argv):
     for n in notes.values():
         validate(n)
     latest = max(notes, key=lambda s: notes[s]["published"])
-    # 2) archivage : tout sauf la dernière analyse passe dans le dépôt privé
-    moved = [s for s in pub if s != latest]
+    # 2) archivage : tout sauf l'analyse offerte (FREE) passe dans le dépôt privé et est chiffré
+    moved = [s for s in pub if s not in FREE]
     if moved:
         if not PRIV.exists():
             raise SystemExit("Dépôt privé introuvable (%s) : impossible d'archiver." % PRIV)
@@ -554,13 +556,13 @@ def main(argv):
             (priv_dir / f"{s}.json").write_text(json.dumps(notes[s], ensure_ascii=False, indent=1), encoding="utf-8")
             (DATA_DIR / f"{s}.json").unlink(missing_ok=True)
             print("ARCHIVÉ  data/notes/%s.json -> dépôt privé" % s)
-    entries = [entry_from(n, s, locked=(s != latest)) for s, n in notes.items()]
+    entries = [entry_from(n, s, locked=(s not in FREE)) for s, n in notes.items()]
     entries.sort(key=lambda x: x["published"], reverse=True)
     # 3) rendu
-    to_render = list(notes) if rebuild else sorted(set(moved) | {latest})
+    to_render = list(notes) if rebuild else sorted(set(moved) | (set(pub) & FREE))
     for s in to_render:
-        render_note(notes[s], s, entries, locked=(s != latest))
-        print("OK  notes/%s.html%s" % (s, "  (verrouillée)" if s != latest else ""))
+        render_note(notes[s], s, entries, locked=(s not in FREE))
+        print("OK  notes/%s.html%s" % (s, "  (verrouillée)" if s not in FREE else ""))
     render_index(entries)
     render_abonnement(entries)
     (ROOT / "data" / "index.json").write_text(json.dumps(entries, ensure_ascii=False, indent=1), encoding="utf-8")

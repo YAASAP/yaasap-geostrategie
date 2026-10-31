@@ -29,6 +29,6 @@ Dépendance : Python 3.9+ ; le paquet `cryptography` dès qu'une analyse est arc
 
 ## Accès
 
-La dernière analyse est libre ; les archives sont chiffrées (AES-256-GCM, déchiffrées dans le navigateur) et réservées aux abonnés ([abonnement](https://yaasap.github.io/yaasap-geostrategie/abonnement.html)). `access.json` ne contient que les enveloppes de clé des abonnés ; clé, codes et sources archivées sont dans un dépôt privé.
+Seule l'analyse sur Ormuz est libre ; toutes les autres sont chiffrées (AES-256-GCM, déchiffrées dans le navigateur) et réservées aux abonnés ([abonnement](https://yaasap.github.io/yaasap-geostrategie/abonnement.html)). `access.json` ne contient que les enveloppes de clé des abonnés ; clé, codes et sources archivées sont dans un dépôt privé.
 
 *Ne constitue pas un conseil en investissement. Par Yacine AOUABED.*
