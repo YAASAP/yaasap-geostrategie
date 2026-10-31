@@ -448,7 +448,7 @@ def render_index(entries):
   <div class="hero-in">
     <div class="eyebrow"><span class="tag">Géostratégie</span><span class="tag">Indépendant</span><span class="tag">Toutes les 2 h</span></div>
     <h1>Une analyse géostratégique indépendante, toutes les 2 heures</h1>
-    <p class="deck">Faits sourcés, positions de chaque acteur, risques et canaux de marché. Même format que YAASAP Notes : chiffres d'abord, verdict tranché, sources citées.</p>
+    <p class="deck">Faits sourcés, positions de chaque acteur, risques et canaux de marché. Chiffres d'abord, verdict tranché, sources citées.</p>
     <div class="home-meta">{last}<span class="tag">{len(entries)} analyse{'s' if len(entries) > 1 else ''} publiée{'s' if len(entries) > 1 else ''}</span></div>
   </div>
 </section>
