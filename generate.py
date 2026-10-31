@@ -59,6 +59,16 @@ FONTS = ('<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamon
          '&family=Source+Sans+3:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">')
 
 
+KEYWORDS = ("analyse géostratégique, géopolitique, analyse géopolitique, géostratégie, risque géopolitique, "
+            "marchés financiers, pétrole, Brent, détroit d'Ormuz, Iran, Ukraine, Taïwan, sanctions, énergie, YAASAP")
+
+
+def ld_tag(obj):
+    if not obj:
+        return ""
+    return '<script type="application/ld+json">' + json.dumps(obj, ensure_ascii=False).replace("</", "<\\/") + "</script>"
+
+
 def e(s):
     return H.escape(str(s), quote=True)
 
@@ -159,7 +169,7 @@ def render_blocks(blocks, charts, timelines, toc):
     return "\n".join(out)
 
 
-def page_head(title, desc, canonical, og_title=None):
+def page_head(title, desc, canonical, og_title=None, jsonld=None):
     return f"""<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -172,7 +182,14 @@ def page_head(title, desc, canonical, og_title=None):
 <meta property="og:title" content="{e(og_title or title)}">
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{e(canonical)}">
-<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<meta name="keywords" content="{e(KEYWORDS)}">
+<meta name="author" content="Yacine AOUABED">
+<meta property="og:site_name" content="YAASAP Géostratégie">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:image" content="{SITE}/assets/banner.jpg">
+<meta name="twitter:card" content="summary_large_image">
+{ld_tag(jsonld)}
 {FONTS}
 <link rel="stylesheet" href="{{PREFIX}}assets/style.css?v={ASSET_V}">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -298,7 +315,15 @@ def render_note(note, stem, index_entries, locked=False):
     src_note = note.get("sources_note", "")
     canonical = f"{SITE}/notes/{stem}.html"
     meta = {"dateShort": date_short(dt)}
-    head = page_head(f'YAASAP Géostratégie · {note["title"]}', note["deck"], canonical, note["title"]).replace("{PREFIX}", prefix)
+    art = {"@context": "https://schema.org", "@type": "NewsArticle", "headline": note["title"][:110],
+           "description": note["deck"], "datePublished": dt.isoformat(), "dateModified": dt.isoformat(),
+           "inLanguage": "fr", "mainEntityOfPage": canonical, "image": f"{SITE}/assets/banner.jpg",
+           "author": {"@type": "Person", "name": "Yacine AOUABED"},
+           "publisher": {"@type": "Organization", "name": "YAASAP Géostratégie", "url": f"{SITE}/"},
+           "isAccessibleForFree": not locked}
+    if locked:
+        art["hasPart"] = {"@type": "WebPageElement", "isAccessibleForFree": False, "cssSelector": "#locked-slot"}
+    head = page_head(f'YAASAP Géostratégie · {note["title"]}', note["deck"], canonical, note["title"], art).replace("{PREFIX}", prefix)
     src_names = " · ".join(s["t"] for s in note.get("sources", []))
     inner = f"""<div class="kpi-strip">
   {kpis}
@@ -390,7 +415,7 @@ def render_index(entries):
     prefix = "./"
     head = page_head("YAASAP Géostratégie · analyses géostratégiques indépendantes",
                      "Une analyse géostratégique indépendante toutes les 2 heures : faits sourcés, positions des acteurs, "
-                     "risques et canaux de marché. Par Yacine AOUABED.", f"{SITE}/").replace("{PREFIX}", prefix)
+                     "risques et canaux de marché. Par Yacine AOUABED.", f"{SITE}/", jsonld=site_ld()).replace("{PREFIX}", prefix)
     head = head.replace('<meta property="og:type" content="article">', '<meta property="og:type" content="website">')
     def card(n):
         dt = datetime.fromisoformat(n["published"]).astimezone(TZ)
@@ -445,6 +470,23 @@ def render_index(entries):
 </html>
 """
     (ROOT / "index.html").write_text(page, encoding="utf-8")
+
+
+def site_ld():
+    return {"@context": "https://schema.org", "@graph": [
+        {"@type": "WebSite", "name": "YAASAP Géostratégie", "url": f"{SITE}/", "inLanguage": "fr",
+         "description": "Une analyse géostratégique indépendante toutes les 2 heures : faits sourcés, positions des acteurs, risques et marchés."},
+        {"@type": "Organization", "name": "YAASAP", "url": f"{SITE}/", "logo": f"{SITE}/assets/banner.jpg",
+         "founder": {"@type": "Person", "name": "Yacine AOUABED"}}]}
+
+
+def write_seo(entries):
+    urls = [(f"{SITE}/", max((x["published"] for x in entries), default=None)), (f"{SITE}/abonnement.html", None)]
+    urls += [(f"{SITE}/notes/{x['file']}", x["published"]) for x in entries]
+    body = "".join(f"<url><loc>{e(u)}</loc>" + (f"<lastmod>{d[:10]}</lastmod>" if d else "") + "</url>" for u, d in urls)
+    (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+                                      + body + "</urlset>\n", encoding="utf-8")
+    (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n", encoding="utf-8")
 
 
 def cta_band():
@@ -565,6 +607,7 @@ def main(argv):
         print("OK  notes/%s.html%s" % (s, "  (verrouillée)" if s not in FREE else ""))
     render_index(entries)
     render_abonnement(entries)
+    write_seo(entries)
     (ROOT / "data" / "index.json").write_text(json.dumps(entries, ensure_ascii=False, indent=1), encoding="utf-8")
     print("OK  index.html + abonnement.html (%d analyses)" % len(entries))
     return 0

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yaasap.github.io/yaasap-geostrategie/sitemap.xml
