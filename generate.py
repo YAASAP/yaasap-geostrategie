@@ -459,6 +459,7 @@ def render_abonnement(entries):
                      "La dernière analyse reste en accès libre.", f"{SITE}/abonnement.html").replace("{PREFIX}", prefix)
     head = head.replace('<meta property="og:type" content="article">', '<meta property="og:type" content="website">')
     n_arch = len([x for x in entries if x.get("locked")])
+    arch_txt = (f" ({n_arch} à ce jour, une de plus toutes les 2 heures)" if n_arch else " : une de plus toutes les 2 heures")
     page = f"""{head}
 <body>
 {masthead(prefix)}
@@ -469,7 +470,7 @@ def render_abonnement(entries):
   <div class="hero-in">
     <div class="eyebrow"><span class="tag hot">Abonnement</span><span class="tag">{PRICE}</span></div>
     <h1>Toutes les archives YAASAP Géostratégie</h1>
-    <p class="deck">La dernière analyse est toujours en accès libre. L'abonnement ouvre l'ensemble des analyses précédentes ({n_arch} à ce jour, une de plus toutes les 2 heures).</p>
+    <p class="deck">La dernière analyse est toujours en accès libre. L'abonnement ouvre l'ensemble des analyses précédentes{arch_txt}.</p>
   </div>
 </section>
 <div class="wrap">
