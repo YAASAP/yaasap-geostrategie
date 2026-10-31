@@ -155,3 +155,31 @@ function nlSubmit() {
     show(events.length - 1);
   });
 })();
+
+/* ---------- Sommaire dynamique : surbrillance de la section lue + progression ---------- */
+(function () {
+  var nav = document.getElementById('toc');
+  if (!nav) return;
+  var links = [].slice.call(nav.querySelectorAll('a'));
+  var targets = links.map(function (a) { return document.getElementById(a.dataset.t); });
+  var bar = document.getElementById('tocBar');
+  function update() {
+    var y = window.scrollY + 130, cur = 0;
+    targets.forEach(function (t, i) { if (t && t.getBoundingClientRect().top + window.scrollY <= y) cur = i; });
+    var atEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+    if (atEnd) cur = targets.length - 1;
+    links.forEach(function (a, i) { a.classList.toggle('on', i === cur); });
+    if (bar) {
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (h > 0 ? Math.min(100, Math.max(0, window.scrollY / h * 100)) : 0) + '%';
+    }
+    var on = links[cur];
+    if (on && window.innerWidth <= 900 && on.scrollIntoView) {
+      var box = nav.parentElement; box.scrollLeft = on.offsetLeft - 24;
+    }
+  }
+  var tick = false;
+  window.addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(function () { tick = false; update(); }); } }, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+})();

@@ -96,12 +96,14 @@ def kicker_html(k):
             f'<div class="kk-n">{e(k.get("n", ""))}</div></div>')
 
 
-def render_blocks(blocks, charts, timelines):
+def render_blocks(blocks, charts, timelines, toc):
     out = []
     for b in blocks:
         t = b["type"]
         if t == "sec":
-            out.append(f'<div class="sec-rule"><span class="sec-rule-txt">{e(b["title"])}</span></div>')
+            sid = f"s{len(toc) + 1}"
+            toc.append((sid, b["title"]))
+            out.append(f'<div class="sec-rule" id="{sid}"><span class="sec-rule-txt">{e(b["title"])}</span></div>')
         elif t == "p":
             out.append(f'<p class="body-p">{raw("p", b["html"])}</p>')
         elif t == "pull":
@@ -227,7 +229,12 @@ def render_note(note, stem, index_entries):
     charts, timelines = [], []
     prefix = "../"
     recent = [{"file": x["file"], "nav": x["nav"]} for x in index_entries if x["file"] != f"{stem}.html"][:3]
-    body = render_blocks(note["blocks"], charts, timelines)
+    toc = []
+    body = render_blocks(note["blocks"], charts, timelines, toc)
+    toc_all = [("lead", "Synthèse")] + toc + [("verdict", "Verdict"), ("sources", "Sources")]
+    toc_html = "".join(
+        f'<a href="#{i}" data-t="{i}"><span class="n">{k + 1:02d}</span><span class="t">{e(t.split(" · ")[0])}</span></a>'
+        for k, (i, t) in enumerate(toc_all))
     tags = "".join(f'<span class="tag{" hot" if t.get("hot") else ""}">{e(t["t"])}</span>' for t in note["tags"])
     kpis = "\n  ".join(kpi_html(k) for k in note["kpis"])
     kick = "\n  ".join(kicker_html(k) for k in note.get("kicker", []))
@@ -264,14 +271,20 @@ def render_note(note, stem, index_entries):
   {kick}
 </div></div>
 
+<div class="layout">
+<aside class="toc glass" aria-label="Sommaire">
+  <div class="toc-t">Sommaire</div>
+  <nav id="toc">{toc_html}</nav>
+  <div class="toc-bar"><i id="tocBar"></i></div>
+</aside>
 <div class="wrap">
 
-  <div class="lead-hl">{e(note["lead"]["hl"])}</div>
+  <div class="lead-hl" id="lead">{e(note["lead"]["hl"])}</div>
   <div class="lead-deck">{raw("lead", note["lead"]["deck"])}</div>
 
 {body}
 
-  <div class="verdict glass">
+  <div class="verdict glass" id="verdict">
     <span class="v-tag">Verdict YAASAP · Yacine AOUABED · {e(date_long(dt))}</span>
     <div class="v-hl">{raw("verdict", v["hl"])}</div>
     <div class="v-list">
@@ -280,10 +293,11 @@ def render_note(note, stem, index_entries):
     <div class="v-disc">Sources : {e(src_names)} · {e(date_long(dt))}. {e(DISCLAIMER)}</div>
   </div>
 
-  <div class="src">Sources : {srcs}.{(" " + raw("sources_note", src_note)) if src_note else ""}</div>
+  <div class="src" id="sources">Sources : {srcs}.{(" " + raw("sources_note", src_note)) if src_note else ""}</div>
 
   {newsletter()}
 
+</div>
 </div>
 </div>
 
