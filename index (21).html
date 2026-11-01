@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YAASAP Géostratégie · analyses géostratégiques indépendantes</title>
+<meta name="description" content="Une analyse géostratégique indépendante toutes les 2 heures : faits sourcés, positions des acteurs, risques et canaux de marché. Par Yacine AOUABED.">
+<link rel="canonical" href="https://yaasap.github.io/yaasap-geostrategie/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="YAASAP Géostratégie · analyses géostratégiques indépendantes">
+<meta property="og:description" content="Une analyse géostratégique indépendante toutes les 2 heures : faits sourcés, positions des acteurs, risques et canaux de marché. Par Yacine AOUABED.">
+<meta property="og:url" content="https://yaasap.github.io/yaasap-geostrategie/">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<meta name="keywords" content="analyse géostratégique, géopolitique, analyse géopolitique, géostratégie, risque géopolitique, marchés financiers, pétrole, Brent, détroit d&#x27;Ormuz, Iran, Ukraine, Taïwan, sanctions, énergie, YAASAP">
+<meta name="author" content="Yacine AOUABED">
+<meta property="og:site_name" content="YAASAP Géostratégie">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:image" content="https://yaasap.github.io/yaasap-geostrategie/assets/banner.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "name": "YAASAP Géostratégie", "url": "https://yaasap.github.io/yaasap-geostrategie/", "inLanguage": "fr", "description": "Une analyse géostratégique indépendante toutes les 2 heures : faits sourcés, positions des acteurs, risques et marchés."}, {"@type": "Organization", "name": "YAASAP", "url": "https://yaasap.github.io/yaasap-geostrategie/", "logo": "https://yaasap.github.io/yaasap-geostrategie/assets/banner.jpg", "founder": {"@type": "Person", "name": "Yacine AOUABED"}}]}</script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Playfair+Display:ital,wght@0,500;0,700;1,400;1,500&family=Source+Sans+3:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/style.css?v=7821d478">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="page">
+<div class="masthead">
+  <a class="pub-name" href="./index.html" style="text-decoration:none">YAASAP <em>Géostratégie</em></a>
+  <div class="mast-r"><span class="mast-date" id="mastDate"></span><div id="qr-mast"></div></div>
+</div>
+<div class="side side-l">
+<aside class="sub-pop" id="subPop" aria-label="Abonnement YAASAP Géostratégie">
+  <button class="sub-x" type="button" aria-label="Fermer" onclick="try{sessionStorage.setItem('subPopX','1')}catch(e){};this.parentNode.style.display='none'">×</button>
+  <div class="sub-p"><span class="sub-n">3 €</span><span class="sub-u">par mois, TTC</span></div>
+  <ul class="sub-l">
+    <li>Toutes les analyses en version complète</li>
+    <li>Une nouvelle analyse toutes les 2 heures</li>
+    <li>Paiement sécurisé par Stripe</li>
+  </ul>
+  <a class="btn-gold sub-b" href="./abonnement.html">S'abonner · 3 € / mois</a>
+</aside>
+  <figure class="ad dia"><img src="./assets/dia-de-los-muertos.jpg?v=7821d478" width="640" height="700" alt="Día de los Muertos, dimanche 1er novembre" loading="lazy"><figcaption>Día de los Muertos · 1er novembre</figcaption></figure>
+  <div class="ad slot"><span class="ad-k">Espace publicitaire</span><b>Votre annonce ici</b><span>Format 300 × 250 · visible sur toutes les pages</span></div>
+</div>
+<div class="side side-r">
+  <a class="promo" href="https://yaasap.github.io/dailywatch/" target="_blank" rel="noopener"><span class="ad-k">Publication YAASAP</span><b>YAASAP Notes</b><span>Analyses financières indépendantes en français : marchés, valeurs suivies, verdict argumenté.</span><i>Lire les notes →</i></a><a class="promo" href="https://yaasap.github.io/SAP-FICO-EXPERT/" target="_blank" rel="noopener"><span class="ad-k">Site YAASAP</span><b>SAP FICO EXPERT</b><span>Fiches et astuces du jour pour consultants SAP FI-CO : transactions, paramétrage, pièges. Fiches dès 2,90 € TTC.</span><i>Voir les fiches →</i></a>
+  <div class="ad slot"><span class="ad-k">Espace publicitaire</span><b>Votre annonce ici</b><span>Format 300 × 250 · visible sur toutes les pages</span></div>
+</div>
+<script>try{if(sessionStorage.getItem('subPopX')==='1')document.getElementById('subPop').style.display='none'}catch(e){}</script>
+<div class="shell">
+<div class="banner glass"><img src="./assets/banner.jpg?v=7821d478" width="1672" height="941" alt="YAASAP : analyses géostratégiques" fetchpriority="high"></div>
+<section class="hero glass home-hero">
+  <svg class="orb" viewBox="0 0 300 300" aria-hidden="true">
+    <defs><radialGradient id="og" cx="38%" cy="34%" r="75%">
+      <stop offset="0" stop-color="#d4af5f" stop-opacity=".5"/><stop offset=".6" stop-color="#1c3466" stop-opacity=".4"/>
+      <stop offset="1" stop-color="#060e1d" stop-opacity=".2"/></radialGradient></defs>
+    <circle cx="150" cy="150" r="118" fill="url(#og)" stroke="#e9d6a0" stroke-opacity=".55"/>
+    <g class="spin" fill="none" stroke="#f1e4c3" stroke-opacity=".35" stroke-width=".8">
+      <ellipse cx="150" cy="150" rx="118" ry="38"/><ellipse cx="150" cy="150" rx="118" ry="78"/>
+      <ellipse cx="150" cy="150" rx="40" ry="118"/><ellipse cx="150" cy="150" rx="82" ry="118"/></g>
+    <g class="spin2" fill="none" stroke="#d9b873" stroke-opacity=".6" stroke-width="1" stroke-dasharray="2 7">
+      <circle cx="150" cy="150" r="138"/><circle cx="150" cy="150" r="148"/></g>
+    <g fill="#fbf3dc"><circle cx="104" cy="108" r="2.2"/><circle cx="168" cy="92" r="1.8"/><circle cx="196" cy="140" r="2.4"/>
+      <circle cx="134" cy="176" r="1.8"/><circle cx="176" cy="198" r="2"/><circle cx="92" cy="156" r="1.6"/></g>
+    <g stroke="#f1e4c3" stroke-opacity=".5" stroke-width=".8" fill="none">
+      <path d="M104 108 L168 92 L196 140 L176 198 L134 176 L92 156 Z"/><path d="M168 92 L134 176"/></g>
+  </svg>
+  <div class="hero-in">
+    <div class="eyebrow"><span class="tag">Géostratégie</span><span class="tag">Indépendant</span><span class="tag">Toutes les 2 h</span></div>
+    <h1>Une analyse géostratégique indépendante, toutes les 2 heures</h1>
+    <p class="deck">Faits sourcés, positions de chaque acteur, risques et canaux de marché. Chiffres d'abord, verdict tranché, sources citées.</p>
+    <div class="home-meta"><span class="tag hot">Dernière analyse · 1 nov. 2026 09:58</span><span class="tag">3 analyses publiées</span></div>
+  </div>
+</section>
+<div class="wrap">
+  <div class="cta-band glass pts-band"><div><div class="cta-t">Carte des points stratégiques</div><div class="cta-s">Ormuz, Malacca, Suez, Bab el-Mandeb… : pays riverains, droits de passage, trafic pétrolier et hors pétrole. Accès libre.</div></div><div class="cta-b"><a class="btn-ghost" href="points-strategiques.html">Voir la carte</a></div></div>
+  <div class="sec-rule"><span class="sec-rule-txt">Analyse offerte · accès libre</span></div>
+  <div class="ncards">
+<a class="ncard glass" href="notes/20261031-1958-ormuz-doha-brent.html"><div class="eyebrow"><span class="tag hot">Iran</span><span class="tag">Ormuz</span><span class="tag">Énergie</span><span class="tag">Géostratégie</span><span class="tag hot">Accès libre</span></div><h2>Ormuz : médiation à Doha, Brent à 118 $ et trafic en recul de 70 %</h2><p>Le Qatar a vu Téhéran vendredi, une délégation iranienne est à Doha samedi. Aucune rencontre américano-iranienne n&#x27;est prévue, et le Brent atteint 118 $ à trois jours des élections américaines.</p><div class="nc-d">31 octobre 2026 · 19:58</div></a>
+  </div>
+  <div class="sec-rule" id="archives"><span class="sec-rule-txt">Analyses réservées aux abonnés</span></div>
+<div class="cta-band glass"><div><div class="cta-t">Toutes les analyses, pour 3 € / mois</div><div class="cta-s">Seule l'analyse sur Ormuz est offerte. Abonnez-vous pour lire chaque analyse en entier, dès sa publication.</div></div><div class="cta-b"><a class="btn-gold" href="https://buy.stripe.com/cNi8wP6GHh0o5eWekCgIo0m" target="_blank" rel="noopener">S'abonner</a><a class="btn-ghost" href="abonnement.html">Déjà abonné ?</a></div></div>
+<div class="ncards">
+<a class="ncard glass locked" href="notes/20261101-0958-iran-apres-midterms.html"><div class="eyebrow"><span class="tag hot">Iran</span><span class="tag">Ormuz</span><span class="tag">Midterms</span><span class="tag">Géostratégie</span><span class="tag lk"><span class="lk-off">🔒 Abonnés</span><span class="lk-on">✓ Abonné</span></span></div><h2>Iran : la fenêtre de négociation se referme avant les élections américaines du 3 novembre</h2><p>Téhéran et Doha proposent de rouvrir Ormuz en deux jours si Washington accepte les conditions iraniennes. Mais Khamenei ordonne une riposte immédiate en cas de frappe, et la région s&#x27;attend à une reprise des attaques après le scrutin.</p><div class="nc-d">1 novembre 2026 · 09:58</div></a>
+<a class="ncard glass locked" href="notes/20261031-2211-sahara-veto-minurso.html"><div class="eyebrow"><span class="tag hot">ONU</span><span class="tag">Sahara occidental</span><span class="tag">Géopolitique</span><span class="tag">Flash</span><span class="tag lk"><span class="lk-off">🔒 Abonnés</span><span class="lk-on">✓ Abonné</span></span></div><h2>Sahara occidental : veto russe à l&#x27;ONU, mandat de la MINURSO non renouvelé</h2><p>Le Conseil de sécurité a rejeté deux projets rivaux vendredi : 11 voix pour le texte américain, mais un veto russe. Le mandat expire ce samedi 31 octobre, avec en toile de fond les liens Washington–Rabat–Israël.</p><div class="nc-d">31 octobre 2026 · 22:11</div></a>
+</div>
+  <div class="nl glass">
+    <div class="nl-hl">Recevoir les prochaines analyses YAASAP</div>
+    <iframe class="nl-frame" src="https://7e6e1dec.sibforms.com/v2/serve/MUIFAC4TBoAJsEjOID6O4MuoQJ0P--3AueU4ptl4DgI1mIHSz7VnvHEvGODq_Ze-g8HizTa3ZA0Bl2l6Aq8P3RRwpfpPiWgPXrjlo2ZZD999bcKcrAiDD4m0WMqwW-A88pziynZluGOa7k558_NzpMut4S5y6VW76yWvfJndOLk4_Q2EzcCXglPM7qh2F0pYwWtoKx59UxraNx7oIA==" title="Inscription à la newsletter YAASAP Géostratégie" loading="lazy" frameborder="0" scrolling="auto" allowfullscreen></iframe>
+  </div>
+</div>
+</div>
+<section class="promo-band"><a class="promo" href="https://yaasap.github.io/dailywatch/" target="_blank" rel="noopener"><span class="ad-k">Publication YAASAP</span><b>YAASAP Notes</b><span>Analyses financières indépendantes en français : marchés, valeurs suivies, verdict argumenté.</span><i>Lire les notes →</i></a><a class="promo" href="https://yaasap.github.io/SAP-FICO-EXPERT/" target="_blank" rel="noopener"><span class="ad-k">Site YAASAP</span><b>SAP FICO EXPERT</b><span>Fiches et astuces du jour pour consultants SAP FI-CO : transactions, paramétrage, pièges. Fiches dès 2,90 € TTC.</span><i>Voir les fiches →</i></a><div class="ad slot"><span class="ad-k">Espace publicitaire</span><b>Votre annonce ici</b><span>Format 300 × 250 · visible sur toutes les pages</span></div></section>
+<footer>
+  <div class="f-nav">
+    <a href="./index.html">Accueil</a>
+    <a href="./notes/20261101-0958-iran-apres-midterms.html">Iran · Après les midterms</a><a href="./notes/20261031-2211-sahara-veto-minurso.html">Sahara · MINURSO · Veto</a><a href="./notes/20261031-1958-ormuz-doha-brent.html">Ormuz · Doha · Brent</a>
+    <a href="./index.html#archives">Analyses abonnés</a>
+    <a href="./points-strategiques.html">Points stratégiques</a>
+    <a href="./abonnement.html">Abonnement</a>
+  </div>
+  <div class="f-note">YAASAP Géostratégie · Yacine AOUABED · yaasap.github.io/yaasap-geostrategie<br>Ne constitue pas un conseil en investissement.</div>
+</footer>
+</div>
+<script>window.YA_PREFIX="./";window.NOTE_META={"dateShort":""};window.NOTE_CHARTS=[];window.NOTE_TIMELINES=[];</script>
+<script src="assets/app.js?v=7821d478"></script>
+<script src="assets/acces.js?v=7821d478"></script>
+</body>
+</html>
