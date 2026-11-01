@@ -44,7 +44,7 @@ DISCLAIMER = ("Ne constitue pas un conseil en investissement. "
 
 def _asset_version():
     h = hashlib.md5()
-    for n in ("style.css", "app.js", "acces.js", "banner.jpg", "banner-cartes.jpg"):
+    for n in ("style.css", "app.js", "acces.js", "banner.jpg", "banner-cartes.jpg", "dia-de-los-muertos.jpg"):
         f = ROOT / "assets" / n
         if f.exists():
             h.update(f.read_bytes())
@@ -218,6 +218,31 @@ def banner(prefix, full=False, img="banner.jpg", size=(1672, 941)):
             'alt="YAASAP : analyses géostratégiques" fetchpriority="high"></div>')
 
 
+AD_CONTACT = ""  # lien de contact annonceurs (ex. "mailto:..."); vide = pas de bouton
+
+
+def ad_slot(fmt="300 × 250"):
+    btn = f'<a class="btn-gold" href="{AD_CONTACT}">Réserver cet espace</a>' if AD_CONTACT else ""
+    return (f'<div class="ad slot"><span class="ad-k">Espace publicitaire</span><b>Votre annonce ici</b>'
+            f'<span>Format {fmt} · visible sur toutes les pages</span>{btn}</div>')
+
+
+def promo_cards():
+    return (
+        '<a class="promo" href="https://yaasap.github.io/dailywatch/" target="_blank" rel="noopener">'
+        '<span class="ad-k">Publication YAASAP</span><b>YAASAP Notes</b>'
+        '<span>Analyses financières indépendantes en français : marchés, valeurs suivies, verdict argumenté.</span>'
+        '<i>Lire les notes →</i></a>'
+        '<a class="promo" href="https://yaasap.github.io/SAP-FICO-EXPERT/" target="_blank" rel="noopener">'
+        '<span class="ad-k">Site YAASAP</span><b>SAP FICO EXPERT</b>'
+        '<span>Fiches et astuces du jour pour consultants SAP FI-CO : transactions, paramétrage, pièges. Fiches dès 2,90 € TTC.</span>'
+        '<i>Voir les fiches →</i></a>')
+
+
+def promo_band():
+    return f'<section class="promo-band">{promo_cards()}{ad_slot()}</section>'
+
+
 def masthead(prefix):
     return f"""<canvas id="bg"></canvas>
 <div class="page">
@@ -225,6 +250,7 @@ def masthead(prefix):
   <a class="pub-name" href="{prefix}index.html" style="text-decoration:none">YAASAP <em>Géostratégie</em></a>
   <div class="mast-r"><span class="mast-date" id="mastDate"></span><div id="qr-mast"></div></div>
 </div>
+<div class="side side-l">
 <aside class="sub-pop" id="subPop" aria-label="Abonnement YAASAP Géostratégie">
   <button class="sub-x" type="button" aria-label="Fermer" onclick="try{{sessionStorage.setItem('subPopX','1')}}catch(e){{}};this.parentNode.style.display='none'">×</button>
   <div class="sub-p"><span class="sub-n">3 €</span><span class="sub-u">par mois, TTC</span></div>
@@ -235,12 +261,20 @@ def masthead(prefix):
   </ul>
   <a class="btn-gold sub-b" href="{prefix}abonnement.html">S'abonner · 3 € / mois</a>
 </aside>
+  <figure class="ad dia"><img src="{prefix}assets/dia-de-los-muertos.jpg?v={ASSET_V}" width="640" height="700" alt="Día de los Muertos, dimanche 1er novembre" loading="lazy"><figcaption>Día de los Muertos · 1er novembre</figcaption></figure>
+  {ad_slot()}
+</div>
+<div class="side side-r">
+  {promo_cards()}
+  {ad_slot("300 × 250")}
+</div>
 <script>try{{if(sessionStorage.getItem('subPopX')==='1')document.getElementById('subPop').style.display='none'}}catch(e){{}}</script>"""
 
 
 def footer(prefix, recent):
     links = "".join(f'<a href="{prefix}notes/{e(n["file"])}">{e(n["nav"])}</a>' for n in recent)
-    return f"""<footer>
+    return f"""{promo_band()}
+<footer>
   <div class="f-nav">
     <a href="{prefix}index.html">Accueil</a>
     {links}
