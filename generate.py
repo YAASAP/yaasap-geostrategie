@@ -224,7 +224,18 @@ def masthead(prefix):
 <div class="masthead">
   <a class="pub-name" href="{prefix}index.html" style="text-decoration:none">YAASAP <em>Géostratégie</em></a>
   <div class="mast-r"><span class="mast-date" id="mastDate"></span><div id="qr-mast"></div></div>
-</div>"""
+</div>
+<aside class="sub-pop" id="subPop" aria-label="Abonnement YAASAP Géostratégie">
+  <button class="sub-x" type="button" aria-label="Fermer" onclick="try{{sessionStorage.setItem('subPopX','1')}}catch(e){{}};this.parentNode.style.display='none'">×</button>
+  <div class="sub-p"><span class="sub-n">3 €</span><span class="sub-u">par mois, TTC</span></div>
+  <ul class="sub-l">
+    <li>Toutes les analyses en version complète</li>
+    <li>Une nouvelle analyse toutes les 2 heures</li>
+    <li>Paiement sécurisé par Stripe</li>
+  </ul>
+  <a class="btn-gold sub-b" href="{prefix}abonnement.html">S'abonner · 3 € / mois</a>
+</aside>
+<script>try{{if(sessionStorage.getItem('subPopX')==='1')document.getElementById('subPop').style.display='none'}}catch(e){{}}</script>"""
 
 
 def footer(prefix, recent):

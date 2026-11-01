@@ -408,3 +408,18 @@ html.sub .lk-on{display:inline}html.sub .lk-off{display:none}
 .layout .pgrid{grid-template-columns:1fr}
 @media(min-width:1180px){.layout .pgrid{grid-template-columns:repeat(2,1fr)}}
 .nl-frame{display:block;width:100%;max-width:540px;height:340px;margin:10px auto 0;border:0;border-radius:12px;background:#fff}
+
+/* POP-UP ABONNEMENT (haut gauche, sous le masthead) */
+.sub-pop{position:absolute;top:64px;left:14px;z-index:90;width:272px;padding:16px 18px 18px;border-radius:14px;
+  background:linear-gradient(160deg,rgba(14,28,58,.97),rgba(8,17,36,.97));border:1px solid rgba(212,175,95,.55);
+  box-shadow:0 14px 40px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.05) inset,0 0 26px rgba(212,175,95,.18);color:#f4f1e6}
+.sub-x{position:absolute;top:6px;right:10px;background:none;border:0;color:var(--gray,#9aa6bd);font-size:20px;line-height:1;cursor:pointer;padding:2px 4px}
+.sub-x:hover{color:#fff}
+.sub-p{text-align:center}
+.sub-n{display:block;font-family:var(--serif,Georgia,serif);font-size:44px;line-height:1;font-weight:700;color:#f3dfa6;text-shadow:0 0 18px rgba(243,223,166,.35)}
+.sub-u{display:block;margin-top:4px;font-family:var(--mono,monospace);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gray,#9aa6bd)}
+.sub-l{list-style:none;margin:12px 0 14px;padding:0}
+.sub-l li{position:relative;padding:7px 0 7px 22px;font-size:13px;line-height:1.35;border-top:1px solid rgba(255,255,255,.07)}
+.sub-l li::before{content:'\2713';position:absolute;left:0;top:6px;color:#e0b95a;font-weight:700}
+.sub-b{display:block;text-align:center;padding:11px 10px}
+@media(max-width:700px){.sub-pop{top:56px;left:8px;width:min(236px,calc(100vw - 16px));padding:12px 14px 14px}.sub-n{font-size:34px}.sub-l li{font-size:12px;padding:5px 0 5px 20px}}

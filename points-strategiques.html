@@ -19,7 +19,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Points stratégiques : pays, droits de passage et trafic maritime", "description": "Carte et fiches des points de passage stratégiques du commerce mondial : Ormuz, Malacca, Suez, Bab el-Mandeb, détroits turcs et danois, Panama, Cap. Pays riverains, droits de passage, trafic pétrolier et hors pétrole.", "inLanguage": "fr", "author": {"@type": "Person", "name": "Yacine AOUABED"}, "mainEntityOfPage": "https://yaasap.github.io/yaasap-geostrategie/points-strategiques.html"}</script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Playfair+Display:ital,wght@0,500;0,700;1,400;1,500&family=Source+Sans+3:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./assets/style.css?v=b696884b">
+<link rel="stylesheet" href="./assets/style.css?v=078e74c0">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
@@ -30,8 +30,19 @@
   <a class="pub-name" href="./index.html" style="text-decoration:none">YAASAP <em>Géostratégie</em></a>
   <div class="mast-r"><span class="mast-date" id="mastDate"></span><div id="qr-mast"></div></div>
 </div>
+<aside class="sub-pop" id="subPop" aria-label="Abonnement YAASAP Géostratégie">
+  <button class="sub-x" type="button" aria-label="Fermer" onclick="try{sessionStorage.setItem('subPopX','1')}catch(e){};this.parentNode.style.display='none'">×</button>
+  <div class="sub-p"><span class="sub-n">3 €</span><span class="sub-u">par mois, TTC</span></div>
+  <ul class="sub-l">
+    <li>Toutes les analyses en version complète</li>
+    <li>Une nouvelle analyse toutes les 2 heures</li>
+    <li>Paiement sécurisé par Stripe</li>
+  </ul>
+  <a class="btn-gold sub-b" href="./abonnement.html">S'abonner · 3 € / mois</a>
+</aside>
+<script>try{if(sessionStorage.getItem('subPopX')==='1')document.getElementById('subPop').style.display='none'}catch(e){}</script>
 <div class="shell">
-<div class="banner glass full"><img src="./assets/banner-cartes.jpg?v=b696884b" width="1399" height="597" alt="YAASAP : analyses géostratégiques" fetchpriority="high"></div>
+<div class="banner glass full"><img src="./assets/banner-cartes.jpg?v=078e74c0" width="1399" height="597" alt="YAASAP : analyses géostratégiques" fetchpriority="high"></div>
 <section class="hero glass home-hero">
   <svg class="orb" viewBox="0 0 300 300" aria-hidden="true">
     <defs><radialGradient id="og" cx="38%" cy="34%" r="75%">
@@ -96,8 +107,8 @@
 </footer>
 </div>
 <script>window.YA_PREFIX="./";window.NOTE_META={"dateShort":""};window.NOTE_CHARTS=[{"kind": "bar", "labels": ["Malacca", "Ormuz", "Cap de Bonne-Espérance", "Suez + SUMED", "Détroits danois", "Bab el-Mandeb", "Dardanelles", "Bosphore", "Panama (exercice 2025)"], "datasets": [{"label": "mb/j", "data": [23.2, 20.9, 9.1, 4.9, 4.9, 4.2, 3.7, 3.3, 2.3]}], "unit": "mb/j"}, {"kind": "bar", "labels": ["Ormuz", "Malacca", "Cap de Bonne-Espérance", "Détroits danois", "Suez + SUMED", "Dardanelles"], "datasets": [{"label": "Gpi³/j", "data": [11.4, 9.2, 5.7, 1.6, 0.9, 0.6]}], "unit": "Gpi³/j"}];window.NOTE_TIMELINES=[];</script>
-<script src="assets/app.js?v=b696884b"></script>
-<script src="assets/acces.js?v=b696884b"></script>
+<script src="assets/app.js?v=078e74c0"></script>
+<script src="assets/acces.js?v=078e74c0"></script>
 <script>(function(){var m=document.querySelectorAll('.wmap .mk');function go(id){var c=document.getElementById('p-'+id);if(!c)return;[].forEach.call(document.querySelectorAll('.pcard'),function(x){x.classList.remove('on')});c.classList.add('on');c.scrollIntoView({behavior:'smooth',block:'center'});}[].forEach.call(m,function(g){g.addEventListener('click',function(){go(g.dataset.id)});g.addEventListener('keydown',function(ev){if(ev.key==='Enter')go(g.dataset.id)});});})();</script>
 </body>
 </html>
