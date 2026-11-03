@@ -117,8 +117,51 @@ def kicker_html(k):
             f'<div class="kk-n">{e(k.get("n", ""))}</div></div>')
 
 
-def render_blocks(blocks, charts, timelines, toc):
+MAP_KEYS = ("kind", "w", "h", "shapes", "regions", "layers", "markers", "links", "legend", "detail",
+            "center", "zoom", "hl")
+LEAFLET = ('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">\n'
+           '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>')
+
+
+def map_config(b):
+    """Prépare la configuration d'une carte dynamique (bloc « map »).
+
+    kind « svg » : fond vectoriel (base « europe » ou « pologne » dans data/cartes/, ou formes fournies),
+    régions colorées, marqueurs, liaisons, calques ; kind « tiles » : fond OpenStreetMap (Leaflet).
+    Les textes (label, t, info) sont insérés en texte brut par app.js : pas de HTML.
+    """
+    c = {k: b[k] for k in MAP_KEYS if k in b}
+    c.setdefault("kind", "svg")
+    pts = {}
+    if b.get("base"):
+        base = json.loads((ROOT / "data" / "cartes" / f'{b["base"]}.json').read_text(encoding="utf-8"))
+        c.setdefault("w", base["w"])
+        c.setdefault("h", base["h"])
+        c["shapes"] = base["shapes"] + list(b.get("shapes", []))
+        pts = base.get("pts", {})
+    for m in c.get("markers", []):
+        if "at" in m:
+            if m["at"] not in pts:
+                raise ValueError(f'Point inconnu sur la carte : {m["at"]}')
+            m["x"], m["y"] = pts[m["at"]]
+    for ln in c.get("links", []):
+        for k in ("from", "to"):
+            if isinstance(ln[k], str):
+                if ln[k] not in pts:
+                    raise ValueError(f'Point inconnu sur la carte : {ln[k]}')
+                ln[k] = pts[ln[k]]
+    for key in ("markers", "regions", "layers", "legend"):
+        for it in c.get(key, []):
+            for k, v in it.items():
+                if isinstance(v, str):
+                    check_safe(f"map.{key}.{k}", v)
+    return c
+
+
+def render_blocks(blocks, charts, timelines, toc, maps=None):
     out = []
+    if maps is None:
+        maps = []
     for b in blocks:
         t = b["type"]
         if t == "sec":
@@ -161,6 +204,17 @@ def render_blocks(blocks, charts, timelines, toc):
                 '<div class="chart-card glass">'
                 f'<div class="chart-hd"><div class="chart-t">{e(b.get("title", "Repères · cliquez sur une date"))}</div></div>'
                 f'<div class="tl" id="tl{i}"></div><div class="detail" id="tlDetail{i}"></div></div>')
+        elif t == "map":
+            i = len(maps)
+            c = map_config(b)
+            maps.append(c)
+            out.append(
+                f'<div class="chart-card glass map-card" data-kind="{e(c["kind"])}">'
+                f'<div class="chart-hd"><div class="chart-t">{e(b["title"])}</div><div class="map-ctl" id="mapCtl{i}"></div></div>'
+                f'<div class="ymap ymap-{e(c["kind"])}" id="map{i}" role="img" aria-label="{e(b["title"])}"></div>'
+                f'<div class="map-legend" id="mapLg{i}"></div><div class="detail map-detail" id="mapDetail{i}"></div>'
+                + (f'<div class="chart-src">{raw("src", b["src"])}</div>' if b.get("src") else "")
+                + '</div>')
         elif t == "html":
             out.append(raw("html", b["html"]))
         else:
@@ -168,7 +222,7 @@ def render_blocks(blocks, charts, timelines, toc):
     return "\n".join(out)
 
 
-def page_head(title, desc, canonical, og_title=None, jsonld=None):
+def page_head(title, desc, canonical, og_title=None, jsonld=None, extra=""):
     return f"""<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -193,6 +247,7 @@ def page_head(title, desc, canonical, og_title=None, jsonld=None):
 <link rel="stylesheet" href="{{PREFIX}}assets/style.css?v={ASSET_V}">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+{extra}
 </head>"""
 
 
@@ -339,11 +394,12 @@ def gate_html(prefix):
 
 def render_note(note, stem, index_entries, locked=False):
     dt = parse_dt(note)
-    charts, timelines = [], []
+    charts, timelines, maps = [], [], []
     prefix = "../"
     recent = [{"file": x["file"], "nav": x["nav"]} for x in index_entries if x["file"] != f"{stem}.html"][:3]
     toc = []
-    body = render_blocks(note["blocks"], charts, timelines, toc)
+    body = render_blocks(note["blocks"], charts, timelines, toc, maps)
+    extra_head = LEAFLET if any(m.get("kind") == "tiles" for m in maps) else ""
     toc_all = [("lead", "Synthèse")] + toc + [("verdict", "Verdict"), ("sources", "Sources")]
     toc_html = "".join(
         f'<a href="#{i}" data-t="{i}"><span class="n">{k + 1:02d}</span><span class="t">{e(t.split(" · ")[0])}</span></a>'
@@ -366,7 +422,7 @@ def render_note(note, stem, index_entries, locked=False):
            "isAccessibleForFree": not locked}
     if locked:
         art["hasPart"] = {"@type": "WebPageElement", "isAccessibleForFree": False, "cssSelector": "#locked-slot"}
-    head = page_head(f'YAASAP Géostratégie · {note["title"]}', note["deck"], canonical, note["title"], art).replace("{PREFIX}", prefix)
+    head = page_head(f'YAASAP Géostratégie · {note["title"]}', note["deck"], canonical, note["title"], art, extra_head).replace("{PREFIX}", prefix)
     src_names = " · ".join(s["t"] for s in note.get("sources", []))
     inner = f"""<div class="kpi-strip">
   {kpis}
@@ -407,10 +463,10 @@ def render_note(note, stem, index_entries, locked=False):
 </div>
 </div>"""
     if locked:
-        payload = encrypt_payload(load_key(), {"inner": inner, "charts": charts, "timelines": timelines})
+        payload = encrypt_payload(load_key(), {"inner": inner, "charts": charts, "timelines": timelines, "maps": maps})
         middle = (gate_html(prefix) + '\n<div id="locked-slot"></div>\n'
                   f'<script id="payload" type="application/json">{{"v":1,"d":"{payload}"}}</script>')
-        charts, timelines = [], []
+        charts, timelines, maps = [], [], []
     else:
         middle = inner.replace("  <newsletter-slot/>", "")
     page = f"""{head}
@@ -434,7 +490,7 @@ def render_note(note, stem, index_entries, locked=False):
 
 {footer(prefix, recent)}
 
-<script>window.YA_PREFIX="{prefix}";window.NOTE_META={json.dumps(meta, ensure_ascii=False)};window.NOTE_CHARTS={json.dumps(charts, ensure_ascii=False).replace("</", "<\\/")};window.NOTE_TIMELINES={json.dumps(timelines, ensure_ascii=False).replace("</", "<\\/")};</script>
+<script>window.YA_PREFIX="{prefix}";window.NOTE_META={json.dumps(meta, ensure_ascii=False)};window.NOTE_CHARTS={json.dumps(charts, ensure_ascii=False).replace("</", "<\\/")};window.NOTE_TIMELINES={json.dumps(timelines, ensure_ascii=False).replace("</", "<\\/")};window.NOTE_MAPS={json.dumps(maps, ensure_ascii=False).replace("</", "<\\/")};</script>
 <script src="{prefix}assets/app.js?v={ASSET_V}"></script>
 <script src="{prefix}assets/acces.js?v={ASSET_V}"></script>
 </body>

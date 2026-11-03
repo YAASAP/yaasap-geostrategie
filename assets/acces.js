@@ -37,7 +37,7 @@
     var o = JSON.parse(pl.textContent);
     var data = JSON.parse(dec.decode(await aesDecrypt(K, b64d(o.d))));
     document.getElementById('locked-slot').innerHTML = data.inner;
-    window.NOTE_CHARTS = data.charts; window.NOTE_TIMELINES = data.timelines;
+    window.NOTE_CHARTS = data.charts; window.NOTE_TIMELINES = data.timelines; window.NOTE_MAPS = data.maps || [];
     var g = document.getElementById('gate'); if (g) g.style.display = 'none';
     pl.remove();
     if (window.yaInit) window.yaInit();
